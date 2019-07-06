@@ -30,7 +30,7 @@ namespace BimsController
 
             renderAction = logic =>
             {
-                _mainWindow.Height = logic.settings.windowSettings.isDetailedMainWindow ? 700 : 450;
+                _mainWindow.Height = logic.settings.windowSettings.isDetailedMainWindow ? 700 : 410;
                 string uri = "pack://application:,,,/BimsController;component/Assets/Images/"+ (logic.settings.windowSettings.isDetailedMainWindow ? "detailed.png" : "brief.png");
 
                 DetailsButtonImage.Source = new BitmapImage(new Uri(uri));
