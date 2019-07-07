@@ -77,11 +77,20 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Logics\Logic.cs" />
+    <Compile Include="Logics\Logs\Logs.cs" />
+    <Compile Include="Logics\Logs\LogsElement.cs" />
     <Compile Include="Logics\Settings\Settings.cs" />
     <Compile Include="Logics\Settings\WindowSettings.cs" />
+    <Compile Include="Windows\LogsWindow.xaml.cs">
+      <DependentUpon>LogsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\LogsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

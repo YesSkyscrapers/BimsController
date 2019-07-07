@@ -14,6 +14,7 @@ namespace BimsController.Logics
         private static List<LogicAction> subscribers = new List<LogicAction>();
 
         public Settings.Settings settings = new Settings.Settings();
+        public Logs.Logs logs = new Logs.Logs();
 
         public static Logic Execute(LogicAction action)
         {

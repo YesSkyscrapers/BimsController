@@ -52,5 +52,25 @@ namespace BimsController
                 logic.settings.windowSettings.isDetailedMainWindow = !logic.settings.windowSettings.isDetailedMainWindow;
             });
         }
+
+        private void Session3LogsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.logs.OpenLogsWindow(2));
+        }
+
+        private void Session2LogsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.logs.OpenLogsWindow(1));
+        }
+
+        private void Session1LogsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.logs.OpenLogsWindow(0));
+        }
+
+        private void StartPauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.logs.Log(0, "123"));
+        }
     }
 }
