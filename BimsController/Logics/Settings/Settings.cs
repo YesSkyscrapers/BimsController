@@ -8,6 +8,14 @@ namespace BimsController.Logics.Settings
 {
     public class Settings
     {
-        public WindowSettings windowSettings = new WindowSettings();
+        public WindowSettings windowSettings;
+        public AppSettings appSettings;
+
+        public Settings()
+        {
+            windowSettings = new WindowSettings();
+            appSettings = new AppSettings();
+            appSettings.LoadAppSettings();
+        }
     }
 }

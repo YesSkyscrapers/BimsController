@@ -33,6 +33,8 @@ namespace BimsController.Logics
 
         public static void Subscribe(LogicAction action)
         {
+            if (_logic == null)
+                _logic = new Logic();
             subscribers.Add(action);
         }
 

@@ -72,5 +72,10 @@ namespace BimsController
         {
             Logic.Execute(logic => logic.logs.Log(0, "123"));
         }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.settings.appSettings.OpenAppSettingsWindow());
+        }
     }
 }
