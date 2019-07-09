@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BimsController.Windows"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="740.457" Width="610.789" ResizeMode="NoResize" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="SettingsWindow" Height="740.457" Width="610.789" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <TabControl Margin="0,0,0,50">
             <TabItem Header="General">

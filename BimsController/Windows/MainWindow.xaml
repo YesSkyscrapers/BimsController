@@ -8,10 +8,10 @@
         Title="BimsController" Height="410" Width="661" ResizeMode="NoResize" Icon="/BimsController;component/AppIcon.ico" Unloaded="Window_Unloaded">
     <Grid>
         <Button x:Name="StartPauseButton" Margin="0,150,360,0" VerticalAlignment="Top" Width="128" Height="128" Background="White" Click="StartPauseButton_Click">
-            <Image Source="/BimsController;component/Assets/Images/play.png"/>
+            <Image x:Name="StartPauseButtonImage" Source="/BimsController;component/Assets/Images/play.png"/>
         </Button>
         <Button x:Name="SettingsButton" Margin="360,150,0,0" VerticalAlignment="Top" Width="128" Height="128" Background="White" Click="SettingsButton_Click">
-            <Image Source="/BimsController;component/Assets/Images/settings.png"/>
+            <Image x:Name="SettingsButtonImage" Source="/BimsController;component/Assets/Images/settings.png"/>
         </Button>
         <Button x:Name="DetailsButton" Margin="0,150,0,0" VerticalAlignment="Top" Width="128" Height="128" Background="White" Click="DetailsButton_Click">
             <Image x:Name="DetailsButtonImage" Source="/BimsController;component/Assets/Images/brief.png"/>

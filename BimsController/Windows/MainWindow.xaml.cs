@@ -31,10 +31,14 @@ namespace BimsController
             renderAction = logic =>
             {
                 _mainWindow.Height = logic.settings.windowSettings.isDetailedMainWindow ? 700 : 410;
-                string uri = "pack://application:,,,/BimsController;component/Assets/Images/"+ (logic.settings.windowSettings.isDetailedMainWindow ? "detailed.png" : "brief.png");
-
+                string uri = "pack://application:,,,/BimsController;component/Assets/Images/" + (logic.settings.windowSettings.isDetailedMainWindow ? "detailed.png" : "brief.png");
                 DetailsButtonImage.Source = new BitmapImage(new Uri(uri));
+                uri = "pack://application:,,,/BimsController;component/Assets/Images/" + (logic.bot.isRunning ? "pause.png" : "play.png");
+                StartPauseButtonImage.Source = new BitmapImage(new Uri(uri));
+                uri = "pack://application:,,,/BimsController;component/Assets/Images/" + (logic.settings.windowSettings.isLockSettingsWindow ? "settings_locked.png" : "settings.png");
+                SettingsButtonImage.Source = new BitmapImage(new Uri(uri));
                 MainWindowDetailsControl.SelectedIndex = logic.settings.windowSettings.isDetailedMainWindow ? 1 : 0;
+                SettingsButton.IsEnabled = logic.settings.windowSettings.isLockSettingsWindow ? false : true;
             };
 
             Logic.Subscribe(renderAction);
@@ -70,7 +74,7 @@ namespace BimsController
 
         private void StartPauseButton_Click(object sender, RoutedEventArgs e)
         {
-            Logic.Execute(logic => logic.logs.Log(0, "123"));
+            Logic.Execute(logic => logic.bot.SwitchBot());
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

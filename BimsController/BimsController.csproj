@@ -81,6 +81,7 @@
     </ApplicationDefinition>
     <Compile Include="Defines\Error.cs" />
     <Compile Include="Defines\Errors.cs" />
+    <Compile Include="Logics\Bot\Bot.cs" />
     <Compile Include="Logics\Logic.cs" />
     <Compile Include="Logics\Logs\Logs.cs" />
     <Compile Include="Logics\Logs\LogsElement.cs" />
@@ -167,7 +168,7 @@
     <Resource Include="Assets\Images\pause.png" />
     <Resource Include="Assets\Images\play.png" />
     <Resource Include="Assets\Images\settings.png" />
-    <Resource Include="Assets\Images\settings_opened.png" />
+    <Resource Include="Assets\Images\settings_locked.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,7 @@
 ﻿using BimsController.Defines;
 using BimsController.Managers;
 using BimsController.Windows;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,12 +61,23 @@ namespace BimsController.Logics.Settings
             {
                 settingsWindow = new SettingsWindow();
                 settingsWindow.Show();
+                Logic.Execute(logic => logic.settings.windowSettings.isOpenSettingsWindow = true, true);
             }
         }
 
-        public void CloseAppSettingsWindow()
+        public void CloseAppSettingsWindow(bool skipClosing = false)
         {
+            if (!skipClosing)
+                settingsWindow.Close();
             settingsWindow = null;
+            Logic.Execute(logic => logic.settings.windowSettings.isOpenSettingsWindow = false, true);
+        }
+
+        public AppSettings Clone()
+        {
+            AppSettings clone = JsonConvert.DeserializeObject<AppSettings>(JsonConvert.SerializeObject(this));
+            clone.settingsWindow = this.settingsWindow;
+            return clone;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BimsController.Logics;
 using BimsController.Logics.Settings;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,24 +60,16 @@ namespace BimsController.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            bool isSuccessful = false;
-
             Logic.Execute(logic => {
 
                 logic.settings.appSettings = _appSettings;
 
-                isSuccessful = logic.settings.appSettings.SaveAppSettings();
+                if (logic.settings.appSettings.SaveAppSettings())
+                    logic.settings.appSettings.CloseAppSettingsWindow();
             });
-            if (isSuccessful)
-                this.Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
         {
             Logic.Execute(logic => {
                 logic.settings.appSettings.CloseAppSettingsWindow();
@@ -168,7 +161,7 @@ namespace BimsController.Windows
         {
             Logic.Execute(logic =>
             {
-                _appSettings = logic.settings.appSettings;
+                _appSettings = logic.settings.appSettings.Clone();
 
                 UpdateSettingsWindow();
             });
@@ -180,6 +173,13 @@ namespace BimsController.Windows
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Logic.Execute(logic => {
+                logic.settings.appSettings.CloseAppSettingsWindow(true);
+            });
         }
     }
 }

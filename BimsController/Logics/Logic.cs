@@ -15,19 +15,23 @@ namespace BimsController.Logics
 
         public Settings.Settings settings = new Settings.Settings();
         public Logs.Logs logs = new Logs.Logs();
+        public Bot.Bot bot = new Bot.Bot();
 
-        public static Logic Execute(LogicAction action)
+        public static Logic Execute(LogicAction action, bool silently = false)
         {
             if (_logic == null)
                 _logic = new Logic();
 
             action(_logic);
 
-            subscribers.ForEach(subscriber =>
+            if (!silently)
             {
-                subscriber(_logic);
-            });
-
+                subscribers.ForEach(subscriber =>
+                {
+                    subscriber(_logic);
+                });
+            }
+            
             return _logic;
         }
 
