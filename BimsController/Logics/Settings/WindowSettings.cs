@@ -11,6 +11,5 @@ namespace BimsController.Logics.Settings
         public bool isDetailedMainWindow = false;
         public bool isOpenSettingsWindow = false;
         public bool isLockSettingsWindow = false;
-        public bool isStartButtonLocked = false;
     }
 }

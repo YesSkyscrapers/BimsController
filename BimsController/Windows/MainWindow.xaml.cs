@@ -1,5 +1,4 @@
-﻿using BimsController.Defines;
-using BimsController.Logics;
+﻿using BimsController.Logics;
 using BimsController.Windows;
 using System;
 using System.Collections.Generic;
@@ -40,10 +39,6 @@ namespace BimsController
                 SettingsButtonImage.Source = new BitmapImage(new Uri(uri));
                 MainWindowDetailsControl.SelectedIndex = logic.settings.windowSettings.isDetailedMainWindow ? 1 : 0;
                 SettingsButton.IsEnabled = logic.settings.windowSettings.isLockSettingsWindow ? false : true;
-                Session1Indicator.Fill = logic.bot.States[0].Equals(ProcessStates.Stopped) ? Brushes.Red : (logic.bot.States[0].Equals(ProcessStates.WaitingRunning) || logic.bot.States[0].Equals(ProcessStates.Canceled)) ? Brushes.Orange : Brushes.Green;
-                Session2Indicator.Fill = logic.bot.States[1].Equals(ProcessStates.Stopped) ? Brushes.Red : (logic.bot.States[1].Equals(ProcessStates.WaitingRunning) || logic.bot.States[1].Equals(ProcessStates.Canceled)) ? Brushes.Orange : Brushes.Green;
-                Session3Indicator.Fill = logic.bot.States[2].Equals(ProcessStates.Stopped) ? Brushes.Red : (logic.bot.States[2].Equals(ProcessStates.WaitingRunning) || logic.bot.States[2].Equals(ProcessStates.Canceled)) ? Brushes.Orange : Brushes.Green;
-                StartPauseButton.IsEnabled = logic.settings.windowSettings.isStartButtonLocked ? false : true;
             };
 
             Logic.Subscribe(renderAction);

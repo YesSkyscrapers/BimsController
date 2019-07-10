@@ -27,15 +27,15 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
                         <Label Content="Session 1: " VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,0,50,0"/>
-                        <Ellipse x:Name="Session1Indicator" Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
+                        <Ellipse Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
                     </Grid>
                     <Grid Grid.Column="1">
                         <Label Content="Session 2: " VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,0,50,0"/>
-                        <Ellipse x:Name="Session2Indicator" Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
+                        <Ellipse Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
                     </Grid>
                     <Grid Grid.Column="2">
                         <Label Content="Session 3: " VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,0,50,0"/>
-                        <Ellipse x:Name="Session3Indicator" Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
+                        <Ellipse Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
                     </Grid>
                 </Grid>
             </TabItem>

@@ -9,7 +9,6 @@ namespace BimsController.Logics
     public class Logic
     {
         public delegate void LogicAction(Logic logic);
-        public delegate Task LogicActionAsync(Logic logic);
 
         private static Logic _logic;
         private static List<LogicAction> subscribers = new List<LogicAction>();
@@ -33,24 +32,6 @@ namespace BimsController.Logics
                 });
             }
             
-            return _logic;
-        }
-
-        public static async Task<Logic> ExecuteAsync(LogicActionAsync asyncAction, bool silently = false)
-        {
-            if (_logic == null)
-                _logic = new Logic();
-
-            await asyncAction(_logic);
-
-            if (!silently)
-            {
-                subscribers.ForEach(subscriber =>
-                {
-                    subscriber(_logic);
-                });
-            }
-
             return _logic;
         }
 
