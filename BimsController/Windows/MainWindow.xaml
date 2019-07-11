@@ -55,7 +55,7 @@
                         <Label FontSize="16">Status:</Label>
                         <Ellipse Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
                         <Label Margin="100,0,0,0" FontSize="16">State:</Label>
-                        <Label x:Name="Session1DescribeProcessLine" Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
+                        <Label Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
                         <Button x:Name="Session1LogsButton" Margin="0,2,0,0" Height="30" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Session1LogsButton_Click">Logs</Button>
                         <Button Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Start</Button>
                         <Button Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Stop</Button>
@@ -65,7 +65,7 @@
                         <Label FontSize="16">Status:</Label>
                         <Ellipse Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
                         <Label Margin="100,0,0,0" FontSize="16">State:</Label>
-                        <Label x:Name="Session2DescribeProcessLine" Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
+                        <Label Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
                         <Button x:Name="Session2LogsButton" Margin="0,2,0,0" Height="30" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Session2LogsButton_Click">Logs</Button>
                         <Button Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Start</Button>
                         <Button Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Stop</Button>
@@ -75,7 +75,7 @@
                         <Label FontSize="16">Status:</Label>
                         <Ellipse Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
                         <Label Margin="100,0,0,0" FontSize="16">State:</Label>
-                        <Label x:Name="Session3DescribeProcessLine" Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
+                        <Label Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
                         <Button x:Name="Session3LogsButton" Margin="0,2,0,0" Height="30" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Session3LogsButton_Click">Logs</Button>
                         <Button Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Start</Button>
                         <Button Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Stop</Button>
