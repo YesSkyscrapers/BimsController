@@ -1,4 +1,6 @@
-﻿using BimsController.Logics;
+﻿using BimsController.Defines;
+using BimsController.Logics;
+using BimsController.Managers;
 using BimsController.Windows;
 using System;
 using System.Collections.Generic;
@@ -35,10 +37,25 @@ namespace BimsController
                 DetailsButtonImage.Source = new BitmapImage(new Uri(uri));
                 uri = "pack://application:,,,/BimsController;component/Assets/Images/" + (logic.bot.IsRunning() ? "pause.png" : "play.png");
                 StartPauseButtonImage.Source = new BitmapImage(new Uri(uri));
-                uri = "pack://application:,,,/BimsController;component/Assets/Images/" + (logic.settings.windowSettings.isLockSettingsWindow ? "settings_locked.png" : "settings.png");
+                uri = "pack://application:,,,/BimsController;component/Assets/Images/" + (LocksManager.getInstance().CheckLock(LocksManager.SettingsWindowLock) ? "settings_locked.png" : "settings.png");
                 SettingsButtonImage.Source = new BitmapImage(new Uri(uri));
                 MainWindowDetailsControl.SelectedIndex = logic.settings.windowSettings.isDetailedMainWindow ? 1 : 0;
-                SettingsButton.IsEnabled = logic.settings.windowSettings.isLockSettingsWindow ? false : true;
+                SettingsButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.SettingsWindowLock);
+                Session1StatusIndicator.Fill = logic.bot.Infos[0].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
+                Session1StateIndicator.Fill = logic.bot.Infos[0].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
+                Session1StateLabel.Content = logic.bot.Infos[0].State.description;
+                Session1StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[0].State.Equals(ProcessStates.Stopped);
+                Session1StopButton.IsEnabled = !logic.bot.Infos[0].State.Equals(ProcessStates.Stopped);
+                Session2StatusIndicator.Fill = logic.bot.Infos[1].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
+                Session2StateIndicator.Fill = logic.bot.Infos[1].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
+                Session2StateLabel.Content = logic.bot.Infos[1].State.description;
+                Session2StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[1].State.Equals(ProcessStates.Stopped);
+                Session2StopButton.IsEnabled = !logic.bot.Infos[1].State.Equals(ProcessStates.Stopped);
+                Session3StatusIndicator.Fill = logic.bot.Infos[2].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
+                Session3StateIndicator.Fill = logic.bot.Infos[2].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
+                Session3StateLabel.Content = logic.bot.Infos[2].State.description;
+                Session3StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[2].State.Equals(ProcessStates.Stopped);
+                Session3StopButton.IsEnabled = !logic.bot.Infos[2].State.Equals(ProcessStates.Stopped);
             };
 
             Logic.Subscribe(renderAction);
@@ -80,6 +97,36 @@ namespace BimsController
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Logic.Execute(logic => logic.settings.appSettings.OpenAppSettingsWindow());
+        }
+
+        private void Session1StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.bot.StartBot(0));
+        }
+
+        private void Session1StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.bot.StopBot(0));
+        }
+
+        private void Session2StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.bot.StartBot(1));
+        }
+
+        private void Session2StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.bot.StopBot(1));
+        }
+
+        private void Session3StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.bot.StartBot(2));
+        }
+
+        private void Session3StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            Logic.Execute(logic => logic.bot.StopBot(2));
         }
     }
 }

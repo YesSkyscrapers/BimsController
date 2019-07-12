@@ -17,8 +17,14 @@ namespace BimsController.Defines
             this.description = description;
         }
 
-        public bool Equals(ProcessState anotherState)
+        public override bool Equals(object anotherStateObj)
         {
+            if (anotherStateObj == null)
+                return false;
+            ProcessState anotherState = anotherStateObj as ProcessState; // возвращает null если объект нельзя привести к типу Money
+            if (anotherStateObj as ProcessState == null)
+                return false;
+
             return this.id == anotherState.id;
         }
     }

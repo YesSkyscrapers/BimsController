@@ -27,15 +27,15 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
                         <Label Content="Session 1: " VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,0,50,0"/>
-                        <Ellipse Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
+                        <Ellipse x:Name="Session1StatusIndicator" Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
                     </Grid>
                     <Grid Grid.Column="1">
                         <Label Content="Session 2: " VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,0,50,0"/>
-                        <Ellipse Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
+                        <Ellipse x:Name="Session2StatusIndicator" Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
                     </Grid>
                     <Grid Grid.Column="2">
                         <Label Content="Session 3: " VerticalAlignment="Center"  HorizontalAlignment="Center" Margin="0,0,50,0"/>
-                        <Ellipse Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
+                        <Ellipse x:Name="Session3StatusIndicator" Fill="Red" Height="10" Stroke="Black" Width="10"  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,0,0,0" />
                     </Grid>
                 </Grid>
             </TabItem>
@@ -53,32 +53,32 @@
                     <Rectangle Fill="Black" HorizontalAlignment="Stretch" Grid.Row="0" />
                     <Grid Grid.Row="1" Margin="80,15">
                         <Label FontSize="16">Status:</Label>
-                        <Ellipse Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
+                        <Ellipse x:Name="Session1StateIndicator" Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
                         <Label Margin="100,0,0,0" FontSize="16">State:</Label>
-                        <Label Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
+                        <Label x:Name="Session1StateLabel" Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
                         <Button x:Name="Session1LogsButton" Margin="0,2,0,0" Height="30" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Session1LogsButton_Click">Logs</Button>
-                        <Button Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Start</Button>
-                        <Button Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Stop</Button>
+                        <Button x:Name="Session1StartButton" Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Session1StartButton_Click">Start</Button>
+                        <Button x:Name="Session1StopButton" Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Session1StopButton_Click">Stop</Button>
                     </Grid>
                     <Rectangle Fill="Black" HorizontalAlignment="Stretch" Grid.Row="2" />
                     <Grid Grid.Row="3" Margin="80,15">
                         <Label FontSize="16">Status:</Label>
-                        <Ellipse Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
+                        <Ellipse x:Name="Session2StateIndicator" Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
                         <Label Margin="100,0,0,0" FontSize="16">State:</Label>
-                        <Label Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
+                        <Label x:Name="Session2StateLabel" Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
                         <Button x:Name="Session2LogsButton" Margin="0,2,0,0" Height="30" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Session2LogsButton_Click">Logs</Button>
-                        <Button Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Start</Button>
-                        <Button Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Stop</Button>
+                        <Button x:Name="Session2StartButton" Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Session2StartButton_Click">Start</Button>
+                        <Button x:Name="Session2StopButton" Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Session2StopButton_Click">Stop</Button>
                     </Grid>
                     <Rectangle Fill="Black" HorizontalAlignment="Stretch" Grid.Row="4" />
                     <Grid Grid.Row="5" Margin="80,15">
                         <Label FontSize="16">Status:</Label>
-                        <Ellipse Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
+                        <Ellipse x:Name="Session3StateIndicator" Fill="Red" Height="13" Stroke="Black" Width="13" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,10,0,0" />
                         <Label Margin="100,0,0,0" FontSize="16">State:</Label>
-                        <Label Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
+                        <Label x:Name="Session3StateLabel" Margin="150,0,0,0" FontSize="16" HorizontalAlignment="Stretch">StateLabel</Label>
                         <Button x:Name="Session3LogsButton" Margin="0,2,0,0" Height="30" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Session3LogsButton_Click">Logs</Button>
-                        <Button Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Start</Button>
-                        <Button Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top">Stop</Button>
+                        <Button x:Name="Session3StartButton" Margin="0,50,200,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Session3StartButton_Click">Start</Button>
+                        <Button x:Name="Session3StopButton" Margin="200,50,0,0" Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Session3StopButton_Click">Stop</Button>
                     </Grid>
                 </Grid>
             </TabItem>
