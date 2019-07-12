@@ -81,7 +81,10 @@
     </ApplicationDefinition>
     <Compile Include="Defines\Error.cs" />
     <Compile Include="Defines\Errors.cs" />
+    <Compile Include="Defines\ProcessState.cs" />
+    <Compile Include="Defines\ProcessStates.cs" />
     <Compile Include="Logics\Bot\Bot.cs" />
+    <Compile Include="Logics\Bot\ProcessInfo.cs" />
     <Compile Include="Logics\Logic.cs" />
     <Compile Include="Logics\Logs\Logs.cs" />
     <Compile Include="Logics\Logs\LogsElement.cs" />
