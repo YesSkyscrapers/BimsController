@@ -1,4 +1,5 @@
 ﻿using BimsController.Defines;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,28 @@ namespace BimsController.Logics.Bot
     public class ProcessInfo
     {
         public ProcessState State = ProcessStates.Stopped;
+        public bool AutoReconnectEnabled = false;
+        public IWebDriver WebDriver = null;
+        public bool CharacterStatus = false;
 
         public void SetState(ProcessState state)
         {
             Logic.Execute(logic => this.State = state);
+        }
+
+        public async Task SetState(ProcessState state, int delay)
+        {
+            Logic.Execute(logic => this.State = state);
+            await Task.Delay(delay);
+        }
+
+        public void CloseWebDriver()
+        {
+            if (WebDriver != null)
+            {
+                WebDriver.Quit();
+                WebDriver = null;
+            }
         }
     }
 }

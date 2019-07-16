@@ -44,17 +44,17 @@ namespace BimsController
                 Session1StatusIndicator.Fill = logic.bot.Infos[0].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
                 Session1StateIndicator.Fill = logic.bot.Infos[0].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
                 Session1StateLabel.Content = logic.bot.Infos[0].State.description;
-                Session1StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[0].State.Equals(ProcessStates.Stopped);
+                Session1StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[0].State.Equals(ProcessStates.Stopped) && logic.settings.appSettings.profilesSettings[0].enabled;
                 Session1StopButton.IsEnabled = !logic.bot.Infos[0].State.Equals(ProcessStates.Stopped);
                 Session2StatusIndicator.Fill = logic.bot.Infos[1].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
                 Session2StateIndicator.Fill = logic.bot.Infos[1].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
                 Session2StateLabel.Content = logic.bot.Infos[1].State.description;
-                Session2StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[1].State.Equals(ProcessStates.Stopped);
+                Session2StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[1].State.Equals(ProcessStates.Stopped) && logic.settings.appSettings.profilesSettings[1].enabled;
                 Session2StopButton.IsEnabled = !logic.bot.Infos[1].State.Equals(ProcessStates.Stopped);
                 Session3StatusIndicator.Fill = logic.bot.Infos[2].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
                 Session3StateIndicator.Fill = logic.bot.Infos[2].State.Equals(ProcessStates.Stopped) ? Brushes.Red : Brushes.Green;
                 Session3StateLabel.Content = logic.bot.Infos[2].State.description;
-                Session3StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[2].State.Equals(ProcessStates.Stopped);
+                Session3StartButton.IsEnabled = !LocksManager.getInstance().CheckLock(LocksManager.BotStartLock) && logic.bot.Infos[2].State.Equals(ProcessStates.Stopped) && logic.settings.appSettings.profilesSettings[2].enabled;
                 Session3StopButton.IsEnabled = !logic.bot.Infos[2].State.Equals(ProcessStates.Stopped);
             };
 

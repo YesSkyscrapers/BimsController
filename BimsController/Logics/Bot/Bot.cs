@@ -1,5 +1,8 @@
 ﻿using BimsController.Defines;
 using BimsController.Managers;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +13,12 @@ namespace BimsController.Logics.Bot
 {
     public class Bot
     {
+        private string AUTORECONNECT_AUTH_URL = "https://cp.uwow.biz/auth/login";
+        private string AUTORECONNECT_CHARACTERS_LIST_URL = "https://cp.uwow.biz/character/correct";
+
         public ProcessInfo[] Infos = new ProcessInfo[] { new ProcessInfo(), new ProcessInfo(), new ProcessInfo() };
         private List<int> _workingSessions = new List<int>();
-        List<Lock> _interruptingLocks = new List<Lock>();
+        //List<Lock> _interruptingLocks = new List<Lock>();
 
         public bool IsRunning()
         {
@@ -44,10 +50,15 @@ namespace BimsController.Logics.Bot
                 if (logic.settings.windowSettings.isOpenSettingsWindow)
                     logic.settings.appSettings.CloseAppSettingsWindow();
                 LocksManager.getInstance().Lock(LocksManager.SettingsWindowLock);
-                _workingSessions.Select(_id => Infos[_id]).Where(info => info.State.Equals(ProcessStates.Stopped)).ToList().ForEach(info => info.SetState(ProcessStates.WaitingToStart));
+                _workingSessions.Where(_id => logic.settings.appSettings.profilesSettings[_id].enabled).Where(_id => Infos[_id].State.Equals(ProcessStates.Stopped)).ToList().ForEach(_id => {
+                    Infos[_id].AutoReconnectEnabled = logic.settings.appSettings.profilesSettings[_id].autoReconnect;
+                    Infos[_id].SetState(ProcessStates.WaitingToStart);
+                });
             });
 
-            await Task.WhenAll(_workingSessions.Select(_id => OpenAutoReconnectWindow(_id)).ToArray());
+            await (Task.Delay(50));
+
+            await Task.WhenAll(_workingSessions.Select(_id => OpenAutoReconnectChecking(_id)).ToArray());
 
             Logic.Execute(logic => LocksManager.getInstance().Unlock(LocksManager.BotStartLock));
         }
@@ -65,9 +76,20 @@ namespace BimsController.Logics.Bot
                 {
                     _lock = LocksManager.getInstance().Lock(LocksManager.InterruptingWaitingToStart, _id);
                 }
-                else if (Infos[_id].State.Equals(ProcessStates.OpeningAutoReconnectWindow))
+                else if (Infos[_id].State.Equals(ProcessStates.OpeningAutoReconnectChecking))
                 {
-                    _lock = LocksManager.getInstance().Lock(LocksManager.InterruptingOpeningAutoReconnectWindow, _id);
+                    _lock = LocksManager.getInstance().Lock(LocksManager.InterruptingOpeningAutoReconnectChecking, _id);
+                }
+                else if (Infos[_id].State.Equals(ProcessStates.FillingAutoReconnectCaptcha))
+                {
+                    _lock = LocksManager.getInstance().Lock(LocksManager.InterruptingFillingAutoReconnectCaptcha, _id);
+                }
+                else if (Infos[_id].State.Equals(ProcessStates.WaitingOtherAutoReconnectProcesses))
+                {
+                    if (Infos[_id].AutoReconnectEnabled)
+                        _lock = LocksManager.getInstance().Lock(LocksManager.InterruptingAutoReconnectLooping, _id);
+                    else
+                        Infos[_id].SetState(ProcessStates.Stopped);
                 }
                 else
                 {
@@ -81,6 +103,13 @@ namespace BimsController.Logics.Bot
             {
                 await Task.Delay(100);
             }
+
+            workingIdsNeedsStopping.ForEach(_id =>
+            {
+                //additional safe
+                if (Infos[_id].WebDriver != null)
+                    Infos[_id].CloseWebDriver();
+            });
 
             if (Infos.Select(info => info.State).All(state => state.Equals(ProcessStates.Stopped)))
                 Logic.Execute(logic => {
@@ -99,14 +128,77 @@ namespace BimsController.Logics.Bot
             return false;
         }
 
-        public async Task OpenAutoReconnectWindow(int sessionId)
+        private void UpdateCharacterStatus(int sessionId, bool status)
+        {
+            if (Infos[sessionId].CharacterStatus != status)
+            {
+                Infos[sessionId].CharacterStatus = status;
+
+                if (status)
+                {
+                    //enter to game
+                }
+                else
+                {
+                    //disconnect
+                }
+            }
+        }
+
+        private async void AutoReconnectLooping(int sessionId)
+        {
+            int checkStatusDelay = 5000;
+            int CharacterId = 0;
+
+            Logic.Execute(logic =>
+            {
+                checkStatusDelay = logic.settings.appSettings.generalSettings.checkStatusDelay;
+                CharacterId = logic.settings.appSettings.profilesSettings[sessionId].characterId;
+            }, true);
+
+            while (!LocksManager.getInstance().CheckLock(LocksManager.InterruptingAutoReconnectLooping, sessionId))
+            {
+                Infos[sessionId].WebDriver.Navigate().GoToUrl(AUTORECONNECT_CHARACTERS_LIST_URL);
+
+                await Task.Delay(1000);
+
+                SelectElement selectBox = new SelectElement(Infos[sessionId].WebDriver.FindElement(By.Name("realm")));
+                selectBox.SelectByValue("67");
+
+                await Task.Delay(1000);
+
+                IWebElement element = Infos[sessionId].WebDriver.FindElement(By.Id(CharacterId.ToString()));
+                ((IJavaScriptExecutor)Infos[sessionId].WebDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+
+                await Task.Delay(1000);
+
+                string characterStatusLabelText = Infos[sessionId].WebDriver.FindElement(By.XPath("//*[@id='" + CharacterId.ToString() + "']/td[6]")).Text;
+
+
+                bool status = characterStatusLabelText.Equals("Онлайн");
+                UpdateCharacterStatus(sessionId, status);
+
+                await Task.Delay(checkStatusDelay);
+            }
+
+            LocksManager.getInstance().Unlock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
+            Infos[sessionId].SetState(ProcessStates.Stopped);
+        }
+
+        public async Task OpenAutoReconnectChecking(int sessionId)
         {
             ProcessInfo currentInfo = Infos[sessionId];
 
             if (!currentInfo.State.Equals(ProcessStates.WaitingToStart))
                 return;
 
-            while (LocksManager.getInstance().CheckLock(LocksManager.OpeningAutoReconnectWindow))
+            if (!Infos[sessionId].AutoReconnectEnabled)
+            {
+                await Infos[sessionId].SetState(ProcessStates.WaitingOtherAutoReconnectProcesses, 50);
+                return;
+            }
+
+            while (LocksManager.getInstance().CheckLock(LocksManager.OpeningAutoReconnectChecking))
             {
                 await Task.Delay(500);
             }
@@ -118,21 +210,55 @@ namespace BimsController.Logics.Bot
                 return;
             }
 
-            LocksManager.getInstance().Lock(LocksManager.OpeningAutoReconnectWindow);
-            currentInfo.SetState(ProcessStates.OpeningAutoReconnectWindow);
+            LocksManager.getInstance().Lock(LocksManager.OpeningAutoReconnectChecking);
+            await currentInfo.SetState(ProcessStates.OpeningAutoReconnectChecking, 50);
 
-            await Task.Delay(1000);
+            //Init webdriver
+            ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+            service.HideCommandPromptWindow = true;
 
-            if (CheckInterruptingLock(LocksManager.InterruptingOpeningAutoReconnectWindow, sessionId))
+            Infos[sessionId].WebDriver = new ChromeDriver(service);
+            Infos[sessionId].WebDriver.Navigate().GoToUrl(AUTORECONNECT_AUTH_URL);
+
+            await Task.Delay(200);
+
+            Logic.Execute(logic => {
+                Infos[sessionId].WebDriver.FindElement(By.Name("username")).SendKeys(logic.settings.appSettings.profilesSettings[sessionId].login);
+                Infos[sessionId].WebDriver.FindElement(By.Name("password")).SendKeys(logic.settings.appSettings.profilesSettings[sessionId].password);
+                Infos[sessionId].WebDriver.FindElement(By.ClassName("lbl")).Click();
+                Infos[sessionId].WebDriver.FindElement(By.Name("captcha")).Click();
+            }, true);
+            
+            if (CheckInterruptingLock(LocksManager.InterruptingOpeningAutoReconnectChecking, sessionId))
             {
-                LocksManager.getInstance().Unlock(LocksManager.OpeningAutoReconnectWindow);
+                Infos[sessionId].CloseWebDriver();
+                LocksManager.getInstance().Unlock(LocksManager.OpeningAutoReconnectChecking);
                 Infos[sessionId].SetState(ProcessStates.Stopped);
 
                 return;
             }
 
-            currentInfo.SetState(ProcessStates.FillingAutoReconnectCaptcha);
-            LocksManager.getInstance().Unlock(LocksManager.OpeningAutoReconnectWindow);
+            LocksManager.getInstance().Unlock(LocksManager.OpeningAutoReconnectChecking);
+            await currentInfo.SetState(ProcessStates.FillingAutoReconnectCaptcha, 50);
+
+            while (Infos[sessionId].WebDriver.Url == AUTORECONNECT_AUTH_URL && !LocksManager.getInstance().CheckLock(LocksManager.InterruptingFillingAutoReconnectCaptcha, sessionId))
+            {
+                await Task.Delay(500);
+            }
+
+            if (CheckInterruptingLock(LocksManager.InterruptingFillingAutoReconnectCaptcha, sessionId))
+            {
+                Infos[sessionId].CloseWebDriver();
+                Infos[sessionId].SetState(ProcessStates.Stopped);
+
+                return;
+            }
+
+            Infos[sessionId].WebDriver.Manage().Window.Position = new System.Drawing.Point(-32000, -32000);
+
+            AutoReconnectLooping(sessionId);
+            await currentInfo.SetState(ProcessStates.WaitingOtherAutoReconnectProcesses, 50);
+
             return;
         }
     }

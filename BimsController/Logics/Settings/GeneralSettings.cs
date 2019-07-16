@@ -9,5 +9,6 @@ namespace BimsController.Logics.Settings
     public class GeneralSettings
     {
         public bool usingTrial = true;
+        public int checkStatusDelay = 5000;
     }
 }

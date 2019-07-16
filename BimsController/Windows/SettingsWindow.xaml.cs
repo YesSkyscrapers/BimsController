@@ -56,6 +56,9 @@ namespace BimsController.Windows
             PasswordTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
             CharacterIdTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
             CharacterNameTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
+
+            UsingTrialCheckBox.IsChecked = _appSettings.generalSettings.usingTrial;
+            CheckStatusDelayTextBox.Text = _appSettings.generalSettings.checkStatusDelay.ToString();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -165,8 +168,6 @@ namespace BimsController.Windows
 
                 UpdateSettingsWindow();
             });
-
-            UsingTrialCheckBox.IsChecked = _appSettings.generalSettings.usingTrial;
         }
 
         private void NumberValidation(object sender, TextCompositionEventArgs e)
@@ -180,6 +181,24 @@ namespace BimsController.Windows
             Logic.Execute(logic => {
                 logic.settings.appSettings.CloseAppSettingsWindow(true);
             });
+        }
+
+        private void NumberAndPositiveValidation(object sender, TextCompositionEventArgs e)
+        {
+            try
+            {
+                Regex regex = new Regex("[^0-9]+");
+                e.Handled = regex.IsMatch(e.Text) && int.Parse(e.Text) > 0;
+            }catch(Exception ex)
+            {
+                e.Handled = false;
+            }
+        }
+
+        private void CheckStatusDelayTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_appSettings != null)
+                _appSettings.generalSettings.checkStatusDelay = int.Parse(CheckStatusDelayTextBox.Text);
         }
     }
 }

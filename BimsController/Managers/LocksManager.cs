@@ -16,10 +16,12 @@ namespace BimsController.Managers
         private static LocksManager _instance;
 
         public static string BotStartLock = "BotStartLock";
-        public static string OpeningAutoReconnectWindow = "OpeningAutoReconnectWindow";
+        public static string OpeningAutoReconnectChecking = "OpeningAutoReconnectChecking";
 
         public static string InterruptingWaitingToStart = "InterruptingWaitingToStart";
-        public static string InterruptingOpeningAutoReconnectWindow = "InterruptingOpeningAutoReconnectWindow";
+        public static string InterruptingOpeningAutoReconnectChecking = "InterruptingOpeningAutoReconnectChecking";
+        public static string InterruptingFillingAutoReconnectCaptcha = "InterruptingFillingAutoReconnectCaptcha";
+        public static string InterruptingAutoReconnectLooping = "InterruptingAutoReconnectLooping";
 
         public static string SettingsWindowLock = "SettingsWindowLock";
 
