@@ -148,12 +148,12 @@ namespace BimsController.Logics.Bot
         private async void AutoReconnectLooping(int sessionId)
         {
             int checkStatusDelay = 5000;
-            int CharacterId = 0;
+            string CharacterName = null;
 
             Logic.Execute(logic =>
             {
                 checkStatusDelay = logic.settings.appSettings.generalSettings.checkStatusDelay;
-                CharacterId = logic.settings.appSettings.profilesSettings[sessionId].characterId;
+                CharacterName = logic.settings.appSettings.profilesSettings[sessionId].characterName;
             }, true);
 
             while (!LocksManager.getInstance().CheckLock(LocksManager.InterruptingAutoReconnectLooping, sessionId))
@@ -167,15 +167,22 @@ namespace BimsController.Logics.Bot
 
                 await Task.Delay(1000);
 
-                IWebElement element = Infos[sessionId].WebDriver.FindElement(By.Id(CharacterId.ToString()));
-                ((IJavaScriptExecutor)Infos[sessionId].WebDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                IWebElement table = Infos[sessionId].WebDriver.FindElement(By.CssSelector("tbody.char"));
+                ((IJavaScriptExecutor)Infos[sessionId].WebDriver).ExecuteScript("arguments[0].scrollIntoView();", table);
 
-                await Task.Delay(1000);
+                IWebElement characterLine = table.FindElements(By.TagName("tr")).Where(_element => _element.GetAttribute("textContent").Contains(CharacterName)).FirstOrDefault();
 
-                string characterStatusLabelText = Infos[sessionId].WebDriver.FindElement(By.XPath("//*[@id='" + CharacterId.ToString() + "']/td[6]")).Text;
+                if (characterLine == null)
+                {
+                    await Infos[sessionId].SetState(ProcessStates.NotFoundCharacter, 20);
 
+                    LocksManager.getInstance().Unlock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
+                    return;
+                }
 
-                bool status = characterStatusLabelText.Equals("Онлайн");
+                
+
+                bool status = characterLine.GetAttribute("textContent").Contains("Онлайн");
                 UpdateCharacterStatus(sessionId, status);
 
                 await Task.Delay(checkStatusDelay);

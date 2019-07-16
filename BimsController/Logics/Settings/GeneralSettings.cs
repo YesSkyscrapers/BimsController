@@ -10,5 +10,7 @@ namespace BimsController.Logics.Settings
     {
         public bool usingTrial = true;
         public int checkStatusDelay = 5000;
+        public int openingWowDelay = 20000;
+        public int enteringToWorldDelay = 120000;
     }
 }

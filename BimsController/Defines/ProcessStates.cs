@@ -14,5 +14,6 @@ namespace BimsController.Defines
         public static ProcessState FillingAutoReconnectCaptcha = new ProcessState(3, "FillingAutoReconnectCaptcha");
         public static ProcessState WaitingOtherAutoReconnectProcesses = new ProcessState(4, "WaitingOtherAutoReconnectProcesses");
         public static ProcessState Running = new ProcessState(5, "Running");
+        public static ProcessState NotFoundCharacter = new ProcessState(-10, "NotFoundCharacter");
     }
 }

@@ -14,7 +14,6 @@ namespace BimsController.Logics.Settings
         public bool autoReconnect = false;
         public string login = null;
         public string password = null;
-        public int characterId = -1;
         public string characterName = null;
     }
 }

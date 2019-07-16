@@ -44,7 +44,6 @@ namespace BimsController.Windows
             AutoreconnectCheckBox.IsChecked = _appSettings.profilesSettings[_selectedProfileForEdit].autoReconnect;
             LoginTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].login;
             PasswordTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].password;
-            CharacterIdTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].characterId.ToString();
             CharacterNameTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].characterName;
 
             BimsbotProfilePathTextBox.IsEnabled = profileEnabled;
@@ -54,11 +53,12 @@ namespace BimsController.Windows
             AutoreconnectCheckBox.IsEnabled = profileEnabled;
             LoginTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
             PasswordTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
-            CharacterIdTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
             CharacterNameTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
 
             UsingTrialCheckBox.IsChecked = _appSettings.generalSettings.usingTrial;
             CheckStatusDelayTextBox.Text = _appSettings.generalSettings.checkStatusDelay.ToString();
+            OpeningWowDelayTextBox.Text = _appSettings.generalSettings.openingWowDelay.ToString();
+            EnteringToWorldDelayTextBox.Text = _appSettings.generalSettings.enteringToWorldDelay.ToString();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -148,12 +148,6 @@ namespace BimsController.Windows
                 _appSettings.profilesSettings[_selectedProfileForEdit].password = PasswordTextBox.Text;
         }
 
-        private void CharacterIdTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (_appSettings != null)
-                _appSettings.profilesSettings[_selectedProfileForEdit].characterId = int.Parse(CharacterIdTextBox.Text);
-        }
-
         private void CharacterNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_appSettings != null)
@@ -199,6 +193,18 @@ namespace BimsController.Windows
         {
             if (_appSettings != null)
                 _appSettings.generalSettings.checkStatusDelay = int.Parse(CheckStatusDelayTextBox.Text);
+        }
+
+        private void OpeningWowDelayTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_appSettings != null)
+                _appSettings.generalSettings.openingWowDelay = int.Parse(OpeningWowDelayTextBox.Text);
+        }
+
+        private void EnteringToWorldDelayTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_appSettings != null)
+                _appSettings.generalSettings.enteringToWorldDelay = int.Parse(EnteringToWorldDelayTextBox.Text);
         }
     }
 }

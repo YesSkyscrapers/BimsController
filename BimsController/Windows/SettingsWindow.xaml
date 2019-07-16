@@ -19,6 +19,22 @@
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="Check character status delay:"/>
                         <TextBox x:Name="CheckStatusDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="CheckStatusDelayTextBox_TextChanged"></TextBox>
                     </Grid>
+                    <Grid Margin="10,80,10,0" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Margin="0,0,0,0" Grid.Column="0" Content="Opening WoW delay:"/>
+                        <TextBox x:Name="OpeningWowDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="OpeningWowDelayTextBox_TextChanged"></TextBox>
+                    </Grid>
+                    <Grid Margin="10,120,10,0" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Margin="0,0,0,0" Grid.Column="0" Content="Entering to world delay:"/>
+                        <TextBox x:Name="EnteringToWorldDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="EnteringToWorldDelayTextBox_TextChanged"></TextBox>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Sessions">
@@ -65,10 +81,8 @@
                                 <TextBox x:Name="PasswordTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="PasswordTextBox_TextChanged"></TextBox>
                             </Grid>
                             <Grid Grid.Column="1" Margin="10,0">
-                                <Label Margin="0,0,0,0">Character Id:</Label>
-                                <TextBox x:Name="CharacterIdTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="CharacterIdTextBox_TextChanged" PreviewTextInput="NumberValidation"></TextBox>
-                                <Label Margin="0,60,0,0">Character Name:</Label>
-                                <TextBox x:Name="CharacterNameTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="CharacterNameTextBox_TextChanged"></TextBox>
+                                <Label Margin="0,0,0,0">Character Name:</Label>
+                                <TextBox x:Name="CharacterNameTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="CharacterNameTextBox_TextChanged"></TextBox>
                             </Grid>
                         </Grid>
                     </Grid>
