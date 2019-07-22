@@ -10,8 +10,8 @@
         <TabControl Margin="0,0,0,50">
             <TabItem Header="General">
                 <Grid>
-                    <CheckBox x:Name="UsingTrialCheckBox" Content="  Using Bimsbot trial version" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="UsingTrialCheckBox_Checked" Unchecked="UsingTrialCheckBox_Checked"/>
-                    <Grid Margin="10,40,10,0" VerticalAlignment="Top">
+                    <CheckBox Visibility="Hidden" x:Name="UsingTrialCheckBox" Content="  Using Bimsbot trial version" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="UsingTrialCheckBox_Checked" Unchecked="UsingTrialCheckBox_Checked"/>
+                    <Grid Margin="10,20,10,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="150"/>
@@ -19,7 +19,7 @@
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="Check character status delay:"/>
                         <TextBox x:Name="CheckStatusDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="CheckStatusDelayTextBox_TextChanged"></TextBox>
                     </Grid>
-                    <Grid Margin="10,80,10,0" VerticalAlignment="Top">
+                    <Grid Margin="10,60,10,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="150"/>
@@ -27,7 +27,7 @@
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="Opening WoW delay:"/>
                         <TextBox x:Name="OpeningWowDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="OpeningWowDelayTextBox_TextChanged"></TextBox>
                     </Grid>
-                    <Grid Margin="10,120,10,0" VerticalAlignment="Top">
+                    <Grid Margin="10,100,10,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="150"/>

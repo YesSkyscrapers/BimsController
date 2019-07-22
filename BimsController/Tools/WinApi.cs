@@ -16,8 +16,9 @@ namespace BimsController.Tools
         private const int LB_GETITEMDATA = 0x0199;
         private const int LB_FINDSTRING = 0x018F;
         private const int LB_FINDSTRINGEXACT = 0x01A2;
-        const UInt32 WM_KEYDOWN = 0x0100;
-        const UInt32 WM_KEYUP = 0x0101;
+        private const int BM_CLICK = 0x00F5;
+        private const UInt32 WM_KEYDOWN = 0x0100;
+        private const UInt32 WM_KEYUP = 0x0101;
 
         private const UInt32 WM_CLOSE = 0x0010;
 
@@ -38,6 +39,67 @@ namespace BimsController.Tools
 
         [DllImport("user32.dll")]
         static extern bool PostMessage(IntPtr hWnd, UInt32 Msg, int wParam, int lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+
+        public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        public static IEnumerable<IntPtr> FindWindows(EnumWindowsProc filter)
+        {
+            IntPtr found = IntPtr.Zero;
+            List<IntPtr> windows = new List<IntPtr>();
+
+            EnumWindows(delegate (IntPtr wnd, IntPtr param)
+            {
+                if (filter(wnd, param))
+                {
+                    windows.Add(wnd);
+                }
+
+                return true;
+            }, IntPtr.Zero);
+
+            return windows;
+        }
+
+        public static IEnumerable<IntPtr> FindWindowsWithClass(string className, List<Int32> otherHandlers = null)
+        {
+            if (otherHandlers == null)
+                otherHandlers = new List<Int32>();
+
+            return FindWindows(delegate (IntPtr wnd, IntPtr param)
+            {
+                return !otherHandlers.Contains(wnd.ToInt32()) && GetClassNameOfWindow(wnd).Equals(className);
+            });
+        }
+
+        [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        static extern long GetClassName(IntPtr hwnd, StringBuilder lpClassName, short nMaxCount);
+
+        public static string GetClassNameOfWindow(IntPtr hwnd)
+        {
+            string className = "";
+            StringBuilder classText = null;
+            try
+            {
+                short cls_max_length = 1000;
+                classText = new StringBuilder("", cls_max_length + 5);
+                GetClassName(hwnd, classText, (short)(cls_max_length + 2));
+
+                if (!String.IsNullOrEmpty(classText.ToString()) && !String.IsNullOrWhiteSpace(classText.ToString()))
+                    className = classText.ToString();
+            }
+            catch (Exception ex)
+            {
+                className = ex.Message;
+            }
+            finally
+            {
+                classText = null;
+            }
+            return className;
+        }
 
         public static void CloseWindow(IntPtr hwnd)
         {
@@ -97,6 +159,39 @@ namespace BimsController.Tools
             await Task.Delay(100);
             PostMessage(handle, WM_KEYUP, VKsConverter.ENTER_VK, 0);
             await Task.Delay(1000);
+        }
+
+        public static async Task SelectLineInPidsList(int index)
+        {
+            IntPtr bimsHandler = FindWindow("WindowsForms10.Window.8.app.0.141b42a_r9_ad1", null);
+            IntPtr listBoxHandler = FindWindowEx((IntPtr)bimsHandler, IntPtr.Zero, "WindowsForms10.LISTBOX.app.0.141b42a_r9_ad1", null);
+            SendMessage(listBoxHandler, LB_SETCURSEL, new IntPtr(index), IntPtr.Zero);
+
+            await Task.Delay(100);
+
+            IntPtr buttonHandler = FindWindowEx((IntPtr)bimsHandler, IntPtr.Zero, "WindowsForms10.BUTTON.app.0.141b42a_r9_ad1", null);
+            SendMessage(buttonHandler, BM_CLICK, IntPtr.Zero, null);
+
+            await Task.Delay(100);
+        }
+
+        public static async Task<int> FindBotWindow(List<int> otherHandlers)
+        {
+            IntPtr bimsHandler = FindWindowsWithClass("WindowsForms10.Window.8.app.0.141b42a_r9_ad1", otherHandlers).First();
+    
+            await Task.Delay(100);
+
+            return bimsHandler.ToInt32();
+        }
+
+
+        public static async Task StartBot(int bimsHandler)
+        {
+            IntPtr buttonHandler = FindWindowEx((IntPtr)bimsHandler, IntPtr.Zero, "WindowsForms10.BUTTON.app.0.141b42a_r9_ad1", null);
+
+            SendMessage(buttonHandler, BM_CLICK, IntPtr.Zero, null);
+
+            await Task.Delay(100);
         }
 
         public static async Task EnterString(IntPtr handle, string str)

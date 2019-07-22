@@ -125,6 +125,10 @@ namespace BimsController.Logics.Bot
                 {
                     //nothing
                 }
+                else if (Infos[_id].State.Equals(ProcessStates.Running))
+                {
+                    _locks.Add(LocksManager.getInstance().Lock(LocksManager.InterruptingRunning, _id));
+                }
                 else
                 {
                     Infos[_id].SetState(ProcessStates.Stopped);
@@ -291,6 +295,26 @@ namespace BimsController.Logics.Bot
                 }
             }
 
+            while (LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
+            {
+                await Task.Delay(1000);
+
+                if (LocksManager.getInstance().CheckLock(LocksManager.InterruptingOpeningWowClient, sessionId))
+                {
+
+                    LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
+                    if (usingAdditionalWowProcess)
+                    {
+                        additionalWowProcess.Kill();
+                        additionalWowProcess = null;
+                    }
+
+                    return false;
+                }
+            }
+
+            LocksManager.getInstance().Lock(LocksManager.OpeningBimsbot);
+
             currentInfo.BimsbotProcess = Process.Start(profilePath);
             await Task.Delay(3000);
 
@@ -331,6 +355,10 @@ namespace BimsController.Logics.Bot
             bool result = outBimsString != null ? outBimsString.Contains("Не в игре") : false;
 
             currentInfo.BimsbotProcess.Kill();
+
+
+            LocksManager.getInstance().Unlock(LocksManager.OpeningBimsbot);
+
             if (usingAdditionalWowProcess)
             {
                 additionalWowProcess.Kill();
@@ -398,6 +426,26 @@ namespace BimsController.Logics.Bot
                 }
             }
 
+            while (LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
+            {
+                await Task.Delay(1000);
+
+                if (LocksManager.getInstance().CheckLock(LocksManager.InterruptingOpeningWowClient, sessionId))
+                {
+
+                    LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
+                    if (usingAdditionalWowProcess)
+                    {
+                        additionalWowProcess.Kill();
+                        additionalWowProcess = null;
+                    }
+
+                    return false;
+                }
+            }
+
+            LocksManager.getInstance().Lock(LocksManager.OpeningBimsbot);
+
             currentInfo.BimsbotProcess = Process.Start(profilePath);
             await Task.Delay(3000);
 
@@ -438,6 +486,8 @@ namespace BimsController.Logics.Bot
 
             currentInfo.BimsbotProcess.Kill();
 
+            LocksManager.getInstance().Unlock(LocksManager.OpeningBimsbot);
+
             if (usingAdditionalWowProcess)
             {
                 additionalWowProcess.Kill();
@@ -467,12 +517,14 @@ namespace BimsController.Logics.Bot
         {
             string wowPath = null;
             int wowOpeningDelay = 20000;
+            int enteringToWorldDelay = 20000;
 
             ProcessInfo currentInfo = Infos[sessionId];
 
             Logic.Execute(logic => {
                 wowPath = logic.settings.appSettings.profilesSettings[sessionId].wowPath;
                 wowOpeningDelay = logic.settings.appSettings.generalSettings.openingWowDelay;
+                enteringToWorldDelay = logic.settings.appSettings.generalSettings.enteringToWorldDelay;
             }, true);
 
 
@@ -489,7 +541,7 @@ namespace BimsController.Logics.Bot
             {
                 await currentInfo.SetState(ProcessStates.StartingWow, 50);
 
-                for(int _i=0; _i<10; _i++)
+                for(int _i=0; _i< wowOpeningDelay/1000; _i++)
                 {
 
                     if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
@@ -540,7 +592,7 @@ namespace BimsController.Logics.Bot
             {
                 await currentInfo.SetState(ProcessStates.EnteringToWorld, 50);
 
-                for(int _ii = 0; _ii < wowOpeningDelay/1000; _ii++)
+                for(int _ii = 0; _ii < enteringToWorldDelay / 1000; _ii++)
                 {
                     await Task.Delay(1000);
 
@@ -594,8 +646,87 @@ namespace BimsController.Logics.Bot
                 return;
             }
 
-            await currentInfo.SetState(ProcessStates.Running, 50);
             LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
+        }
+
+        public async void WowBotLooping(int sessionId)
+        {
+            ProcessInfo currentInfo = Infos[sessionId];
+
+            if (!currentInfo.State.Equals(ProcessStates.PreloadStringSending))
+                return;
+
+            await currentInfo.SetState(ProcessStates.Running, 50);
+
+            LocksManager.getInstance().Lock(LocksManager.WowClientLooping, sessionId);
+
+            currentInfo.isRunning = true;
+
+            string profilePath = null;
+            bool usingTrial = true;
+
+            Logic.Execute(logic =>
+            {
+                profilePath = logic.settings.appSettings.profilesSettings[sessionId].profilePath;
+                usingTrial = logic.settings.appSettings.generalSettings.usingTrial;
+            }, true);
+
+            while (currentInfo.isRunning)
+            {
+                LocksManager.getInstance().Lock(LocksManager.OpeningBimsbot);
+
+                Infos[sessionId].BimsbotProcess = Process.Start(profilePath);
+
+                await Task.Delay(3000);
+
+                if (usingTrial)
+                    WinApi.CloseWindow(currentInfo.BimsbotProcess.MainWindowHandle);
+
+                await Task.Delay(3000);
+
+                if (Infos.Where(info => info.WowProcess != null).Count() > 1)
+                {
+                    List<string> pids = WinApi.GetPidsList();
+                    int ourLine = -1;
+
+                    for (int i = 0; i < pids.Count(); i++)
+                    {
+                        if (pids[i].Contains(Infos[sessionId].WowProcess.Id.ToString()))
+                            ourLine = i;
+                    }
+
+                    await WinApi.SelectLineInPidsList(ourLine);
+                }
+
+                await Task.Delay(1000);
+
+                currentInfo.BimsbotHandler = await WinApi.FindBotWindow(Infos.Where(info => info.BimsbotHandler > 0).Select(info => info.BimsbotHandler).ToList());
+
+                LocksManager.getInstance().Unlock(LocksManager.OpeningBimsbot);
+
+                await WinApi.StartBot(currentInfo.BimsbotHandler);
+
+                Random random = new Random();
+                int delay = random.Next(300000, 450000);
+                for (int i=0; i < delay / 1000; i++)
+                {
+                    await Task.Delay(1000);
+                    if (CheckInterruptingLock(LocksManager.InterruptingRunning, sessionId))
+                    {
+                        currentInfo.isRunning = false;
+
+                        currentInfo.CloseBimsbotProcess();
+                        currentInfo.CloseWowProcess();
+
+                        LocksManager.getInstance().Unlock(LocksManager.WowClientLooping, sessionId);
+                        await CallToStopProcess(sessionId);
+
+                        return;
+                    }
+                }
+
+                currentInfo.CloseBimsbotProcess();
+            }
         }
 
         public async Task OpenWowSessionTask(int sessionId)
@@ -606,6 +737,8 @@ namespace BimsController.Logics.Bot
                 return;
 
             await OpenWowClient(sessionId);
+
+            WowBotLooping(sessionId);
         }
 
         public async Task CallToStopProcess(int sessionId)

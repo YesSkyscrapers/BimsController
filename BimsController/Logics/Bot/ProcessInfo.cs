@@ -17,6 +17,8 @@ namespace BimsController.Logics.Bot
         public bool CharacterStatus = false;
         public Process WowProcess = null;
         public Process BimsbotProcess = null;
+        public bool isRunning = false;
+        public Int32 BimsbotHandler = 0;
 
         public void SetState(ProcessState state)
         {
@@ -53,6 +55,8 @@ namespace BimsController.Logics.Bot
             {
                 BimsbotProcess.Kill();
                 BimsbotProcess = null;
+                if (BimsbotHandler > 0)
+                    BimsbotHandler = 0;
             }
         }
     }
