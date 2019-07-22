@@ -64,6 +64,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -104,6 +105,8 @@
     <Compile Include="Logics\Settings\WindowSettings.cs" />
     <Compile Include="Managers\FileManager.cs" />
     <Compile Include="Managers\LocksManager.cs" />
+    <Compile Include="Tools\VKsConverter.cs" />
+    <Compile Include="Tools\WinApi.cs" />
     <Compile Include="Windows\LogsWindow.xaml.cs">
       <DependentUpon>LogsWindow.xaml</DependentUpon>
     </Compile>

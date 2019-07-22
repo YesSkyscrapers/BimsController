@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace BimsController.Logics.Bot
         public bool AutoReconnectEnabled = false;
         public IWebDriver WebDriver = null;
         public bool CharacterStatus = false;
+        public Process WowProcess = null;
+        public Process BimsbotProcess = null;
 
         public void SetState(ProcessState state)
         {
@@ -32,6 +35,24 @@ namespace BimsController.Logics.Bot
             {
                 WebDriver.Quit();
                 WebDriver = null;
+            }
+        }
+
+        public void CloseWowProcess()
+        {
+            if (WowProcess != null)
+            {
+                WowProcess.Kill();
+                WowProcess = null;
+            }
+        }
+
+        public void CloseBimsbotProcess()
+        {
+            if (BimsbotProcess != null)
+            {
+                BimsbotProcess.Kill();
+                BimsbotProcess = null;
             }
         }
     }

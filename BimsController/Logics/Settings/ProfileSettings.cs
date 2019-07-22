@@ -15,5 +15,6 @@ namespace BimsController.Logics.Settings
         public string login = null;
         public string password = null;
         public string characterName = null;
+        public string keysToPressAfterEnteringToWorld = null;
     }
 }

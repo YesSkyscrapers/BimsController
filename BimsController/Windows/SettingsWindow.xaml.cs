@@ -45,6 +45,7 @@ namespace BimsController.Windows
             LoginTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].login;
             PasswordTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].password;
             CharacterNameTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].characterName;
+            EnteredWorldKeys.Text = _appSettings.profilesSettings[_selectedProfileForEdit].keysToPressAfterEnteringToWorld;
 
             BimsbotProfilePathTextBox.IsEnabled = profileEnabled;
             BimsbotProfilePathButton.IsEnabled = profileEnabled;
@@ -205,6 +206,12 @@ namespace BimsController.Windows
         {
             if (_appSettings != null)
                 _appSettings.generalSettings.enteringToWorldDelay = int.Parse(EnteringToWorldDelayTextBox.Text);
+        }
+
+        private void EnteredWorldKeys_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_appSettings != null)
+                _appSettings.profilesSettings[_selectedProfileForEdit].keysToPressAfterEnteringToWorld = EnteredWorldKeys.Text;
         }
     }
 }

@@ -79,6 +79,8 @@
                                 <TextBox x:Name="LoginTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="LoginTextBox_TextChanged"></TextBox>
                                 <Label Margin="0,60,0,0">Password:</Label>
                                 <TextBox x:Name="PasswordTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="PasswordTextBox_TextChanged"></TextBox>
+                                <Label Margin="0,150,0,0">Entered World Keys:</Label>
+                                <TextBox x:Name="EnteredWorldKeys" Height="25" Margin="0,180,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
                             </Grid>
                             <Grid Grid.Column="1" Margin="10,0">
                                 <Label Margin="0,0,0,0">Character Name:</Label>

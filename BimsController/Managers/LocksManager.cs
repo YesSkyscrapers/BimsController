@@ -17,13 +17,20 @@ namespace BimsController.Managers
 
         public static string BotStartLock = "BotStartLock";
         public static string OpeningAutoReconnectChecking = "OpeningAutoReconnectChecking";
+        public static string OpeningWowClient = "OpeningWowClient";
 
         public static string InterruptingWaitingToStart = "InterruptingWaitingToStart";
         public static string InterruptingOpeningAutoReconnectChecking = "InterruptingOpeningAutoReconnectChecking";
         public static string InterruptingFillingAutoReconnectCaptcha = "InterruptingFillingAutoReconnectCaptcha";
         public static string InterruptingAutoReconnectLooping = "InterruptingAutoReconnectLooping";
+        public static string InterruptingOpeningWowClient = "InterruptingOpeningWowClient";
 
         public static string SettingsWindowLock = "SettingsWindowLock";
+
+        public static string AutoReconnectLooping = "AutoReconnectLooping";
+        public static string WowClientLooping = "WowClientLooping";
+        public static string MainBotStartingProcess = "MainBotStartingProcess";
+
 
         public static LocksManager getInstance()
         {
