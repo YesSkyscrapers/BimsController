@@ -15,6 +15,7 @@ namespace BimsController.Logics.Bot
         public bool AutoReconnectEnabled = false;
         public IWebDriver WebDriver = null;
         public bool CharacterStatus = false;
+        public bool AutoReconnectProcessStarted = false;
         public Process WowProcess = null;
         public Process BimsbotProcess = null;
         public bool isRunning = false;

@@ -20,6 +20,7 @@ namespace BimsController.Defines
         public static ProcessState CheckingIsEnteredToWorld = new ProcessState(9, "CheckingIsEnteredToWorld");
         public static ProcessState PreloadStringSending = new ProcessState(10, "PreloadStringSending");
         public static ProcessState Running = new ProcessState(11, "Running");
+        public static ProcessState AutoReconnect = new ProcessState(-1, "AutoReconnect");
         public static ProcessState NotFoundCharacter = new ProcessState(-10, "NotFoundCharacter");
     }
 }

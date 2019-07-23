@@ -60,6 +60,7 @@ namespace BimsController.Windows
             CheckStatusDelayTextBox.Text = _appSettings.generalSettings.checkStatusDelay.ToString();
             OpeningWowDelayTextBox.Text = _appSettings.generalSettings.openingWowDelay.ToString();
             EnteringToWorldDelayTextBox.Text = _appSettings.generalSettings.enteringToWorldDelay.ToString();
+            AutoReconnectDelayTextBox.Text = _appSettings.generalSettings.reconnectDelay.ToString();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -212,6 +213,12 @@ namespace BimsController.Windows
         {
             if (_appSettings != null)
                 _appSettings.profilesSettings[_selectedProfileForEdit].keysToPressAfterEnteringToWorld = EnteredWorldKeys.Text;
+        }
+
+        private void AutoReconnectDelayTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_appSettings != null)
+                _appSettings.generalSettings.reconnectDelay = int.Parse(AutoReconnectDelayTextBox.Text);
         }
     }
 }

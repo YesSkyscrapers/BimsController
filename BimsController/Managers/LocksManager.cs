@@ -26,6 +26,7 @@ namespace BimsController.Managers
         public static string InterruptingAutoReconnectLooping = "InterruptingAutoReconnectLooping";
         public static string InterruptingOpeningWowClient = "InterruptingOpeningWowClient";
         public static string InterruptingRunning = "InterruptingRunning";
+        public static string InterruptingAutoReconnect = "InterruptingAutoReconnect";
 
         public static string SettingsWindowLock = "SettingsWindowLock";
 

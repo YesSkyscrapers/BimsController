@@ -129,6 +129,10 @@ namespace BimsController.Logics.Bot
                 {
                     _locks.Add(LocksManager.getInstance().Lock(LocksManager.InterruptingRunning, _id));
                 }
+                else if (Infos[_id].State.Equals(ProcessStates.AutoReconnect))
+                {
+                    _locks.Add(LocksManager.getInstance().Lock(LocksManager.InterruptingAutoReconnect, _id));
+                }
                 else
                 {
                     Infos[_id].SetState(ProcessStates.Stopped);
@@ -148,13 +152,6 @@ namespace BimsController.Logics.Bot
             {
                 await Task.Delay(100);
             }
-
-            workingIdsNeedsStopping.ForEach(_id =>
-            {
-                //additional safe
-                if (Infos[_id].WebDriver != null)
-                    Infos[_id].CloseWebDriver();
-            });
 
             if (Infos.Select(info => info.State).All(state => state.Equals(ProcessStates.Stopped)))
                 Logic.Execute(logic => {
@@ -181,11 +178,11 @@ namespace BimsController.Logics.Bot
 
                 if (status)
                 {
-                    //enter to game
+                    //Infos[sessionId].SetState(ProcessStates.WaitingOtherAutoReconnectProcesses);
                 }
                 else
                 {
-                    //disconnect
+                    Infos[sessionId].SetState(ProcessStates.AutoReconnect);
                 }
             }
         }
@@ -221,10 +218,9 @@ namespace BimsController.Logics.Bot
 
                 if (characterLine == null)
                 {
-                    await Infos[sessionId].SetState(ProcessStates.NotFoundCharacter, 20);
 
-                    LocksManager.getInstance().Unlock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
-                    return;
+                    await Task.Delay(checkStatusDelay);
+                    continue;
                 }
 
                 bool status = characterLine.GetAttribute("textContent").Contains("Онлайн");
@@ -235,6 +231,7 @@ namespace BimsController.Logics.Bot
 
             LocksManager.getInstance().Unlock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
             LocksManager.getInstance().Unlock(LocksManager.AutoReconnectLooping, sessionId);
+            Infos[sessionId].CloseWebDriver();
             await CallToStopProcess(sessionId);
         }
         
@@ -698,9 +695,21 @@ namespace BimsController.Logics.Bot
                     await WinApi.SelectLineInPidsList(ourLine);
                 }
 
-                await Task.Delay(1000);
+                await Task.Delay(3000);
 
-                currentInfo.BimsbotHandler = await WinApi.FindBotWindow(Infos.Where(info => info.BimsbotHandler > 0).Select(info => info.BimsbotHandler).ToList());
+                currentInfo.BimsbotHandler = 0;
+                while (currentInfo.BimsbotHandler ==0)
+                {
+                    try
+                    {
+                        currentInfo.BimsbotHandler = await WinApi.FindBotWindow(Infos.Where(info => info.BimsbotHandler > 0).Select(info => info.BimsbotHandler).ToList());
+                    }
+                    catch (Exception ex)
+                    {
+                        await Task.Delay(3000);
+                    }
+                }
+                    
 
                 LocksManager.getInstance().Unlock(LocksManager.OpeningBimsbot);
 
@@ -723,10 +732,49 @@ namespace BimsController.Logics.Bot
 
                         return;
                     }
+
+                    if (!currentInfo.CharacterStatus && i>30)
+                    {
+                        currentInfo.CloseBimsbotProcess();
+                        currentInfo.CloseWowProcess();
+
+                        LocksManager.getInstance().Unlock(LocksManager.WowClientLooping, sessionId);
+                        await CallToStopProcess(sessionId);
+
+                        ReloadWowSessionTask(sessionId);
+
+                        return;
+                    }
                 }
 
                 currentInfo.CloseBimsbotProcess();
             }
+        }
+
+        public async void ReloadWowSessionTask(int sessionId)
+        {
+            int reconnectDelay = 15 * 60 * 1000;
+
+            Logic.Execute(logic =>
+            {
+                reconnectDelay = logic.settings.appSettings.generalSettings.reconnectDelay;
+            }, true);
+
+            for (int i=0; i<reconnectDelay/1000; i++)
+            {
+                await Task.Delay(1000);
+
+                if (CheckInterruptingLock(LocksManager.InterruptingAutoReconnect, sessionId))
+                {
+                    LocksManager.getInstance().Lock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
+
+                    return;
+                }
+            }
+
+            Infos[sessionId].SetState(ProcessStates.WaitingOtherAutoReconnectProcesses);
+
+            await OpenWowSessionTask(sessionId);
         }
 
         public async Task OpenWowSessionTask(int sessionId)
@@ -736,6 +784,7 @@ namespace BimsController.Logics.Bot
             if (!currentInfo.State.Equals(ProcessStates.WaitingOtherAutoReconnectProcesses))
                 return;
 
+            
             await OpenWowClient(sessionId);
 
             WowBotLooping(sessionId);
