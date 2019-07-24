@@ -46,6 +46,9 @@ namespace BimsController.Windows
             PasswordTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].password;
             CharacterNameTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].characterName;
             EnteredWorldKeys.Text = _appSettings.profilesSettings[_selectedProfileForEdit].keysToPressAfterEnteringToWorld;
+            RestartServerTimeTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].serverRestartTime.ToString("HH:mm");
+            RestartServerTimeTextBox.IsEnabled = _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
+            AvoidRestartServerCheckBox.IsChecked = _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
 
             BimsbotProfilePathTextBox.IsEnabled = profileEnabled;
             BimsbotProfilePathButton.IsEnabled = profileEnabled;
@@ -219,6 +222,33 @@ namespace BimsController.Windows
         {
             if (_appSettings != null)
                 _appSettings.generalSettings.reconnectDelay = int.Parse(AutoReconnectDelayTextBox.Text);
+        }
+
+        private void AvoidRestartServerCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            
+            if (_appSettings != null)
+            {
+                _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart = (bool)AvoidRestartServerCheckBox.IsChecked;
+                UpdateSettingsWindow();
+            }
+        }
+
+        private void RestartServerTimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_appSettings != null)
+            {
+
+                try
+                {
+                    _appSettings.profilesSettings[_selectedProfileForEdit].serverRestartTime = DateTime.Parse(RestartServerTimeTextBox.Text);
+                    RestartServerTimeTextBox.Foreground = Brushes.Black;
+                }
+                catch(Exception ex)
+                {
+                    RestartServerTimeTextBox.Foreground = Brushes.Red;
+                }
+            }
         }
     }
 }

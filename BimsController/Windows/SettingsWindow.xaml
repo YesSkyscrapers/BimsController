@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="SettingsWindow" Height="740.457" Width="610.789" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
-        <TabControl Margin="0,0,0,50">
+        <TabControl Margin="0,0,0,50" Grid.RowSpan="2">
             <TabItem Header="General">
                 <Grid>
                     <CheckBox Visibility="Hidden" x:Name="UsingTrialCheckBox" Content="  Using Bimsbot trial version" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Checked="UsingTrialCheckBox_Checked" Unchecked="UsingTrialCheckBox_Checked"/>
@@ -87,9 +87,11 @@
                                 <TextBox x:Name="LoginTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="LoginTextBox_TextChanged"></TextBox>
                                 <Label Margin="0,60,0,0">Password:</Label>
                                 <TextBox x:Name="PasswordTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="PasswordTextBox_TextChanged"></TextBox>
-                                <Label Margin="0,150,0,0">Entered World Keys:</Label>
-                                <TextBox x:Name="EnteredWorldKeys" Height="25" Margin="0,180,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
-                            </Grid>
+                                <Label Margin="0,190,0,0">Entered World Keys:</Label>
+                                <TextBox x:Name="EnteredWorldKeys" Height="25" Margin="0,220,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
+                                <CheckBox x:Name="AvoidRestartServerCheckBox" Content="  Avoid Server Restart" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Checked="AvoidRestartServerCheckBox_Checked" Unchecked="AvoidRestartServerCheckBox_Checked"/>
+                                <TextBox x:Name="RestartServerTimeTextBox" Text="7:00" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="RestartServerTimeTextBox_TextChanged" Height="25" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 160, 0 ,0"/>
+                            </Grid> 
                             <Grid Grid.Column="1" Margin="10,0">
                                 <Label Margin="0,0,0,0">Character Name:</Label>
                                 <TextBox x:Name="CharacterNameTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="CharacterNameTextBox_TextChanged"></TextBox>
@@ -99,7 +101,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Grid VerticalAlignment="Bottom" Height="50">
+        <Grid VerticalAlignment="Bottom" Height="50" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="1*"/>
@@ -108,6 +110,6 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="SaveButton" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="100" Click="SaveButton_Click">Save</Button>
             <Button x:Name="CancelButton" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="100" Click="CancelButton_Click">Cancel</Button>
-        </Grid>  
+        </Grid>
     </Grid>
 </Window>

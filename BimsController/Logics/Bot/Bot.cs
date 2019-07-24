@@ -527,6 +527,8 @@ namespace BimsController.Logics.Bot
 
             await currentInfo.SetState(ProcessStates.StartingWow, 50);
 
+            await Task.Delay(3000 * sessionId);
+
             Infos[sessionId].WowProcess = new Process();
             Infos[sessionId].WowProcess.StartInfo.FileName = wowPath;
             Infos[sessionId].WowProcess.StartInfo.Arguments = "-noautolaunch64bi﻿﻿t";
@@ -661,15 +663,39 @@ namespace BimsController.Logics.Bot
 
             string profilePath = null;
             bool usingTrial = true;
+            bool avoidServerRestart = true;
+            DateTime serverRestartTime = DateTime.Today;
 
             Logic.Execute(logic =>
             {
                 profilePath = logic.settings.appSettings.profilesSettings[sessionId].profilePath;
                 usingTrial = logic.settings.appSettings.generalSettings.usingTrial;
+                avoidServerRestart = logic.settings.appSettings.profilesSettings[sessionId].avoidServerRestart;
+                serverRestartTime = logic.settings.appSettings.profilesSettings[sessionId].serverRestartTime;
             }, true);
+
+            serverRestartTime = serverRestartTime.AddMinutes(-10);
 
             while (currentInfo.isRunning)
             {
+
+                while(LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
+                {
+                    await Task.Delay(1000);
+
+                    if (CheckInterruptingLock(LocksManager.InterruptingRunning, sessionId))
+                    {
+                        currentInfo.isRunning = false;
+
+                        currentInfo.CloseWowProcess();
+
+                        LocksManager.getInstance().Unlock(LocksManager.WowClientLooping, sessionId);
+                        await CallToStopProcess(sessionId);
+
+                        return;
+                    }
+                }
+
                 LocksManager.getInstance().Lock(LocksManager.OpeningBimsbot);
 
                 Infos[sessionId].BimsbotProcess = Process.Start(profilePath);
@@ -720,6 +746,7 @@ namespace BimsController.Logics.Bot
                 for (int i=0; i < delay / 1000; i++)
                 {
                     await Task.Delay(1000);
+                    //press bot stop
                     if (CheckInterruptingLock(LocksManager.InterruptingRunning, sessionId))
                     {
                         currentInfo.isRunning = false;
@@ -733,7 +760,8 @@ namespace BimsController.Logics.Bot
                         return;
                     }
 
-                    if (!currentInfo.CharacterStatus && i>30)
+                    //wow doesnt started                                //avoiding server restart
+                    if ((!currentInfo.CharacterStatus && i>30) || (avoidServerRestart && Math.Abs(DateTime.Now.Subtract(serverRestartTime).TotalMinutes) <= 1))
                     {
                         currentInfo.CloseBimsbotProcess();
                         currentInfo.CloseWowProcess();
@@ -741,7 +769,10 @@ namespace BimsController.Logics.Bot
                         LocksManager.getInstance().Unlock(LocksManager.WowClientLooping, sessionId);
                         await CallToStopProcess(sessionId);
 
-                        ReloadWowSessionTask(sessionId);
+                        if (avoidServerRestart && Math.Abs(DateTime.Now.Subtract(serverRestartTime).TotalMinutes) <= 1)
+                            ReloadWowSessionTask(sessionId, 20*60*1000);
+                        else
+                            ReloadWowSessionTask(sessionId);
 
                         return;
                     }
@@ -751,10 +782,8 @@ namespace BimsController.Logics.Bot
             }
         }
 
-        public async void ReloadWowSessionTask(int sessionId)
+        public async void ReloadWowSessionTask(int sessionId, int reconnectDelay = 15*60*1000)
         {
-            int reconnectDelay = 15 * 60 * 1000;
-
             Logic.Execute(logic =>
             {
                 reconnectDelay = logic.settings.appSettings.generalSettings.reconnectDelay;

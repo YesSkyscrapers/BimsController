@@ -16,5 +16,7 @@ namespace BimsController.Logics.Settings
         public string password = null;
         public string characterName = null;
         public string keysToPressAfterEnteringToWorld = null;
+        public bool avoidServerRestart = false;
+        public DateTime serverRestartTime = DateTime.Parse("7:00");
     }
 }
