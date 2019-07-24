@@ -77,6 +77,8 @@ namespace BimsController.Logics.Bot
 
         public async void StopBot(int id = -1)
         {
+            LocksManager.getInstance().Lock(LocksManager.BotStopLock);
+
             List<int> stoppingIds = (new List<int>() { 0, 1, 2 }).Where(_id => id == _id || id == -1).ToList();
             List<int> workingIdsNeedsStopping = _workingSessions.Intersect(stoppingIds).ToList();
             _workingSessions = _workingSessions.Except(workingIdsNeedsStopping).ToList();
@@ -132,6 +134,7 @@ namespace BimsController.Logics.Bot
                 else if (Infos[_id].State.Equals(ProcessStates.AutoReconnect))
                 {
                     _locks.Add(LocksManager.getInstance().Lock(LocksManager.InterruptingAutoReconnect, _id));
+                    _locks.Add(LocksManager.getInstance().Lock(LocksManager.InterruptingAutoReconnectLooping, _id)); 
                 }
                 else
                 {
@@ -153,10 +156,14 @@ namespace BimsController.Logics.Bot
                 await Task.Delay(100);
             }
 
-            if (Infos.Select(info => info.State).All(state => state.Equals(ProcessStates.Stopped)))
-                Logic.Execute(logic => {
+            
+
+            Logic.Execute(logic => {
+                LocksManager.getInstance().Unlock(LocksManager.BotStopLock);
+
+                if (Infos.Select(info => info.State).All(state => state.Equals(ProcessStates.Stopped)))
                     LocksManager.getInstance().Unlock(LocksManager.SettingsWindowLock);
-                });
+            });
         }
 
         private bool CheckInterruptingLock(string key, int sessionId = 3)
@@ -507,6 +514,8 @@ namespace BimsController.Logics.Bot
                 password = logic.settings.appSettings.profilesSettings[sessionId].password;
             }, true);
 
+            await WinApi.SetEngLanguage(Infos[sessionId].WowProcess.MainWindowHandle);
+
             await WinApi.EnterCredentials(Infos[sessionId].WowProcess.MainWindowHandle, login, password);
         }
 
@@ -795,8 +804,6 @@ namespace BimsController.Logics.Bot
 
                 if (CheckInterruptingLock(LocksManager.InterruptingAutoReconnect, sessionId))
                 {
-                    LocksManager.getInstance().Lock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
-
                     return;
                 }
             }

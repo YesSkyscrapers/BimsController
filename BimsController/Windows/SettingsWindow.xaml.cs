@@ -47,7 +47,6 @@ namespace BimsController.Windows
             CharacterNameTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].characterName;
             EnteredWorldKeys.Text = _appSettings.profilesSettings[_selectedProfileForEdit].keysToPressAfterEnteringToWorld;
             RestartServerTimeTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].serverRestartTime.ToString("HH:mm");
-            RestartServerTimeTextBox.IsEnabled = _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
             AvoidRestartServerCheckBox.IsChecked = _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
 
             BimsbotProfilePathTextBox.IsEnabled = profileEnabled;
@@ -55,9 +54,12 @@ namespace BimsController.Windows
             WowPathTextBox.IsEnabled = profileEnabled;
             WowPathButton.IsEnabled = profileEnabled;
             AutoreconnectCheckBox.IsEnabled = profileEnabled;
-            LoginTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
-            PasswordTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
+            LoginTextBox.IsEnabled = profileEnabled;
+            PasswordTextBox.IsEnabled = profileEnabled;
             CharacterNameTextBox.IsEnabled = profileEnabled && autoreconnectEnabled;
+            AvoidRestartServerCheckBox.IsEnabled = profileEnabled;
+            RestartServerTimeTextBox.IsEnabled = profileEnabled && _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
+            EnteredWorldKeys.IsEnabled = profileEnabled;
 
             UsingTrialCheckBox.IsChecked = _appSettings.generalSettings.usingTrial;
             CheckStatusDelayTextBox.Text = _appSettings.generalSettings.checkStatusDelay.ToString();

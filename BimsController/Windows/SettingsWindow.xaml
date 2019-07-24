@@ -17,7 +17,7 @@
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="Check character status delay:"/>
-                        <TextBox x:Name="CheckStatusDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="CheckStatusDelayTextBox_TextChanged"></TextBox>
+                        <TextBox VerticalContentAlignment="Center" x:Name="CheckStatusDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="CheckStatusDelayTextBox_TextChanged"></TextBox>
                     </Grid>
                     <Grid Margin="10,60,10,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="Opening WoW delay:"/>
-                        <TextBox x:Name="OpeningWowDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="OpeningWowDelayTextBox_TextChanged"></TextBox>
+                        <TextBox VerticalContentAlignment="Center" x:Name="OpeningWowDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="OpeningWowDelayTextBox_TextChanged"></TextBox>
                     </Grid>
                     <Grid Margin="10,100,10,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
@@ -33,7 +33,7 @@
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="Entering to world delay:"/>
-                        <TextBox x:Name="EnteringToWorldDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="EnteringToWorldDelayTextBox_TextChanged"></TextBox>
+                        <TextBox VerticalContentAlignment="Center" x:Name="EnteringToWorldDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="EnteringToWorldDelayTextBox_TextChanged"></TextBox>
                     </Grid>
                     <Grid Margin="10,140,10,0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
@@ -41,7 +41,7 @@
                             <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <Label Margin="0,0,0,0" Grid.Column="0" Content="AutoReconnect delay:"/>
-                        <TextBox x:Name="AutoReconnectDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="AutoReconnectDelayTextBox_TextChanged"></TextBox>
+                        <TextBox VerticalContentAlignment="Center" x:Name="AutoReconnectDelayTextBox" Grid.Column="1" Height="25" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" PreviewTextInput="NumberAndPositiveValidation" TextChanged="AutoReconnectDelayTextBox_TextChanged"></TextBox>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -64,7 +64,7 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="BimsbotProfilePathTextBox" Height="25" Margin="5,0,10,0" Grid.Column="0" IsReadOnly="True"></TextBox>
+                            <TextBox VerticalContentAlignment="Center" x:Name="BimsbotProfilePathTextBox" Height="25" Margin="5,0,10,0" Grid.Column="0" IsReadOnly="True"></TextBox>
                             <Button x:Name="BimsbotProfilePathButton" Height="25" Grid.Column="1" Click="BimsbotProfilePathButton_Click">Browse</Button>
                         </Grid>
                         <Label Margin="0,120,0,0">Wow path:</Label>
@@ -73,7 +73,7 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="WowPathTextBox" Height="25" Margin="5,0,10,0" Grid.Column="0" IsReadOnly="True"></TextBox>
+                            <TextBox VerticalContentAlignment="Center" x:Name="WowPathTextBox" Height="25" Margin="5,0,10,0" Grid.Column="0" IsReadOnly="True"></TextBox>
                             <Button x:Name="WowPathButton" Height="25" Grid.Column="1" Click="WowPathButton_Click">Browse</Button>
                         </Grid>
                         <CheckBox x:Name="AutoreconnectCheckBox" Content="  Autoreconnect (Chrome Browser Required)" HorizontalAlignment="Left" Margin="10,200,0,0" VerticalAlignment="Top" Checked="AutoreconnectCheckBox_Checked" Unchecked="AutoreconnectCheckBox_Checked"/>
@@ -84,17 +84,17 @@
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Margin="10,0">
                                 <Label Margin="0,0,0,0">Login:</Label>
-                                <TextBox x:Name="LoginTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="LoginTextBox_TextChanged"></TextBox>
+                                <TextBox VerticalContentAlignment="Center" x:Name="LoginTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="LoginTextBox_TextChanged"></TextBox>
                                 <Label Margin="0,60,0,0">Password:</Label>
-                                <TextBox x:Name="PasswordTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="PasswordTextBox_TextChanged"></TextBox>
+                                <TextBox VerticalContentAlignment="Center" x:Name="PasswordTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="PasswordTextBox_TextChanged"></TextBox>
                                 <Label Margin="0,190,0,0">Entered World Keys:</Label>
-                                <TextBox x:Name="EnteredWorldKeys" Height="25" Margin="0,220,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
+                                <TextBox VerticalContentAlignment="Center" x:Name="EnteredWorldKeys" Height="25" Margin="0,220,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
                                 <CheckBox x:Name="AvoidRestartServerCheckBox" Content="  Avoid Server Restart" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Checked="AvoidRestartServerCheckBox_Checked" Unchecked="AvoidRestartServerCheckBox_Checked"/>
-                                <TextBox x:Name="RestartServerTimeTextBox" Text="7:00" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextChanged="RestartServerTimeTextBox_TextChanged" Height="25" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 160, 0 ,0"/>
+                                <TextBox VerticalContentAlignment="Center" x:Name="RestartServerTimeTextBox" Text="7:00" HorizontalContentAlignment="Center" TextChanged="RestartServerTimeTextBox_TextChanged" Height="25" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 160, 0 ,0"/>
                             </Grid> 
                             <Grid Grid.Column="1" Margin="10,0">
                                 <Label Margin="0,0,0,0">Character Name:</Label>
-                                <TextBox x:Name="CharacterNameTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="CharacterNameTextBox_TextChanged"></TextBox>
+                                <TextBox VerticalContentAlignment="Center" x:Name="CharacterNameTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="CharacterNameTextBox_TextChanged"></TextBox>
                             </Grid>
                         </Grid>
                     </Grid>

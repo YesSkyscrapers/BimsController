@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BimsController.Tools
 {
@@ -202,7 +204,17 @@ namespace BimsController.Tools
             {
                 await Task.Delay(100);
                 PostMessage(handle, WM_KEYDOWN, VKs[i], 0);
+                await Task.Delay(100);
+                PostMessage(handle, WM_KEYUP, VKs[i], 0);
             }
+        }
+
+        public static async Task SetEngLanguage(IntPtr processHandle)
+        {
+            IntPtr langHandler = InputLanguage.FromCulture(new CultureInfo("en-US")).Handle;
+            PostMessage(processHandle, 0x0050, 0, langHandler.ToInt32());
+
+            await Task.Delay(100);
         }
     }
 }

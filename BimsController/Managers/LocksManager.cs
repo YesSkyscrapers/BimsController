@@ -16,6 +16,7 @@ namespace BimsController.Managers
         private static LocksManager _instance;
 
         public static string BotStartLock = "BotStartLock";
+        public static string BotStopLock = "BotStopLock";
         public static string OpeningAutoReconnectChecking = "OpeningAutoReconnectChecking";
         public static string OpeningWowClient = "OpeningWowClient";
         public static string OpeningBimsbot = "OpeningBimsbot"; 
