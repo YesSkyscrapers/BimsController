@@ -185,10 +185,12 @@ namespace BimsController.Logics.Bot
 
                 if (status)
                 {
+                    Logic.Execute(logic => logic.logs.Log(sessionId, "Character is online"));
                     //Infos[sessionId].SetState(ProcessStates.WaitingOtherAutoReconnectProcesses);
                 }
                 else
                 {
+                    Logic.Execute(logic => logic.logs.Log(sessionId, "Character is offline"));
                     Infos[sessionId].SetState(ProcessStates.AutoReconnect);
                 }
             }
@@ -198,6 +200,8 @@ namespace BimsController.Logics.Bot
         {
             int checkStatusDelay = 5000;
             string CharacterName = null;
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "AutoReconnect Looping is enabled"));
 
             LocksManager.getInstance().Lock(LocksManager.AutoReconnectLooping, sessionId);
 
@@ -225,7 +229,7 @@ namespace BimsController.Logics.Bot
 
                 if (characterLine == null)
                 {
-
+                    await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Can't find character (nick: {0})", CharacterName)));
                     await Task.Delay(checkStatusDelay);
                     continue;
                 }
@@ -235,6 +239,8 @@ namespace BimsController.Logics.Bot
 
                 await Task.Delay(checkStatusDelay);
             }
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "AutoReconnect Looping aborted"));
 
             LocksManager.getInstance().Unlock(LocksManager.InterruptingAutoReconnectLooping, sessionId);
             LocksManager.getInstance().Unlock(LocksManager.AutoReconnectLooping, sessionId);
@@ -543,6 +549,8 @@ namespace BimsController.Logics.Bot
             Infos[sessionId].WowProcess.StartInfo.Arguments = "-noautolaunch64bi﻿﻿t";
             Infos[sessionId].WowProcess.Start();
 
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Wow is started"));
+
 
             bool requireToCheckOpenedClient = true;
             do
@@ -554,6 +562,7 @@ namespace BimsController.Logics.Bot
 
                     if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
                     {
+                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                         Infos[sessionId].CloseWowProcess();
                         LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                         await CallToStopProcess(sessionId);
@@ -586,6 +595,7 @@ namespace BimsController.Logics.Bot
 
             if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
             {
+                await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                 Infos[sessionId].CloseWowProcess();
                 LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                 await CallToStopProcess(sessionId);
@@ -606,6 +616,7 @@ namespace BimsController.Logics.Bot
 
                     if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
                     {
+                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                         Infos[sessionId].CloseWowProcess();
                         LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                         await CallToStopProcess(sessionId);
@@ -620,6 +631,7 @@ namespace BimsController.Logics.Bot
 
                 if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
                 {
+                    await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                     Infos[sessionId].CloseWowProcess();
                     LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                     await CallToStopProcess(sessionId);
@@ -630,12 +642,15 @@ namespace BimsController.Logics.Bot
                 attempt++;
                 if (attempt >= 15)
                 {
+                    await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Character is still offline. Relaunching the game"));
                     Infos[sessionId].WowProcess.Kill();
                     Infos[sessionId].WowProcess = null;
                     await OpenWowClient(sessionId);
                     return;
                 }
             } while (requireToCheck);
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Entered to world"));
 
             await currentInfo.SetState(ProcessStates.PreloadStringSending, 50);
 
@@ -647,6 +662,7 @@ namespace BimsController.Logics.Bot
 
             if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
             {
+                await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                 Infos[sessionId].CloseWowProcess();
                 LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                 await CallToStopProcess(sessionId);
@@ -663,6 +679,8 @@ namespace BimsController.Logics.Bot
 
             if (!currentInfo.State.Equals(ProcessStates.PreloadStringSending))
                 return;
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Wow bot Looping is enabled"));
 
             await currentInfo.SetState(ProcessStates.Running, 50);
 
@@ -694,6 +712,7 @@ namespace BimsController.Logics.Bot
 
                     if (CheckInterruptingLock(LocksManager.InterruptingRunning, sessionId))
                     {
+                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                         currentInfo.isRunning = false;
 
                         currentInfo.CloseWowProcess();
@@ -741,6 +760,7 @@ namespace BimsController.Logics.Bot
                     }
                     catch (Exception ex)
                     {
+                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Can't find handler. Waiting 3 sec... ({0})", ex.Message)));
                         await Task.Delay(3000);
                     }
                 }
@@ -758,6 +778,7 @@ namespace BimsController.Logics.Bot
                     //press bot stop
                     if (CheckInterruptingLock(LocksManager.InterruptingRunning, sessionId))
                     {
+                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                         currentInfo.isRunning = false;
 
                         currentInfo.CloseBimsbotProcess();
@@ -769,9 +790,12 @@ namespace BimsController.Logics.Bot
                         return;
                     }
 
-                    //wow doesnt started                                //avoiding server restart
+                    //wow doesnt started or disconnect                              //avoiding server restart
                     if ((!currentInfo.CharacterStatus && i>30) || (avoidServerRestart && Math.Abs(DateTime.Now.Subtract(serverRestartTime).TotalMinutes) <= 1))
                     {
+                        if ((avoidServerRestart && Math.Abs(DateTime.Now.Subtract(serverRestartTime).TotalMinutes) <= 1))
+                            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Avoiding server restart"));
+
                         currentInfo.CloseBimsbotProcess();
                         currentInfo.CloseWowProcess();
 
@@ -804,6 +828,7 @@ namespace BimsController.Logics.Bot
 
                 if (CheckInterruptingLock(LocksManager.InterruptingAutoReconnect, sessionId))
                 {
+                    await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", Infos[sessionId].State.description)));
                     return;
                 }
             }
@@ -843,10 +868,14 @@ namespace BimsController.Logics.Bot
 
             if (!Infos[sessionId].AutoReconnectEnabled)
             {
+                await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "AutoReconnect is disabled. Waiting other processes."));
+
                 await Infos[sessionId].SetState(ProcessStates.WaitingOtherAutoReconnectProcesses, 50);
                 return;
             }
 
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Waiting in queue to open AutoReconnect checking"));
             while (LocksManager.getInstance().CheckLock(LocksManager.OpeningAutoReconnectChecking))
             {
                 await Task.Delay(500);
@@ -854,6 +883,7 @@ namespace BimsController.Logics.Bot
 
             if (CheckInterruptingLock(LocksManager.InterruptingWaitingToStart, sessionId))
             {
+                await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                 LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                 await CallToStopProcess(sessionId);
 
@@ -867,10 +897,14 @@ namespace BimsController.Logics.Bot
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = true;
 
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "WebDriver opening"));
+
             Infos[sessionId].WebDriver = new ChromeDriver(service);
             Infos[sessionId].WebDriver.Navigate().GoToUrl(AUTORECONNECT_AUTH_URL);
 
             await Task.Delay(200);
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Filling base information"));
 
             Logic.Execute(logic => {
                 Infos[sessionId].WebDriver.FindElement(By.Name("username")).SendKeys(logic.settings.appSettings.profilesSettings[sessionId].login);
@@ -878,9 +912,12 @@ namespace BimsController.Logics.Bot
                 Infos[sessionId].WebDriver.FindElement(By.ClassName("lbl")).Click();
                 Infos[sessionId].WebDriver.FindElement(By.Name("captcha")).Click();
             }, true);
-            
+
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
+
             if (CheckInterruptingLock(LocksManager.InterruptingOpeningAutoReconnectChecking, sessionId))
             {
+                await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                 Infos[sessionId].CloseWebDriver();
                 LocksManager.getInstance().Unlock(LocksManager.OpeningAutoReconnectChecking);
                 LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
@@ -892,6 +929,8 @@ namespace BimsController.Logics.Bot
             LocksManager.getInstance().Unlock(LocksManager.OpeningAutoReconnectChecking);
             await currentInfo.SetState(ProcessStates.FillingAutoReconnectCaptcha, 50);
 
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Filling credentials"));
+
             while (Infos[sessionId].WebDriver.Url == AUTORECONNECT_AUTH_URL && !LocksManager.getInstance().CheckLock(LocksManager.InterruptingFillingAutoReconnectCaptcha, sessionId))
             {
                 await Task.Delay(500);
@@ -899,6 +938,7 @@ namespace BimsController.Logics.Bot
 
             if (CheckInterruptingLock(LocksManager.InterruptingFillingAutoReconnectCaptcha, sessionId))
             {
+                await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                 Infos[sessionId].CloseWebDriver();
                 LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                 await CallToStopProcess(sessionId);
@@ -906,9 +946,12 @@ namespace BimsController.Logics.Bot
                 return;
             }
 
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Credentials accepted"));
+
             Infos[sessionId].WebDriver.Manage().Window.Position = new System.Drawing.Point(-32000, -32000);
 
             AutoReconnectLooping(sessionId);
+            await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Waiting other processes."));
             await currentInfo.SetState(ProcessStates.WaitingOtherAutoReconnectProcesses, 50);
 
             return;

@@ -31,6 +31,7 @@ namespace BimsController.Windows
             {
                 LogsTextBox.Document.Blocks.Clear();
                 LogsTextBox.Document.Blocks.Add(new Paragraph(new Run(logic.logs.ReadLogs(_processId))));
+                LogsTextBox.ScrollToEnd();
             };
 
             Logics.Logic.Subscribe(renderAction);

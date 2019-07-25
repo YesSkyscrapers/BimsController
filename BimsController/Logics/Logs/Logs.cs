@@ -11,6 +11,7 @@ namespace BimsController.Logics.Logs
 
     public class Logs
     {
+        private int maxLogsCount = 200;
         private List<LogsElement> _logs;
         private List<ReadLogsDelegate> _subscribers;
         private LogsWindow[] windows = new LogsWindow[3];
@@ -34,6 +35,12 @@ namespace BimsController.Logics.Logs
 
         public void Log(int processId, string log)
         {
+            if (_logs.Where(elem => elem.processId == processId).Count() > maxLogsCount)
+            {
+                var oldLogs = _logs.Where(elem => elem.processId == processId).Take(10);
+                oldLogs.ToList().ForEach(oldLog => _logs.Remove(oldLog));
+            }
+
             _logs.Add(new LogsElement(processId, log));
 
             _subscribers.ForEach(subscriber => subscriber());
@@ -41,7 +48,7 @@ namespace BimsController.Logics.Logs
 
         public string ReadLogs(int processId)
         {
-            return string.Join("\r\n", _logs.Where(logElement => logElement.processId == processId).Select(logElement => logElement.log));
+            return string.Join("\r\n", _logs.Where(logElement => logElement.processId == processId).Select(logElement => string.Format("[{0}]: {1}", logElement.time.ToString("HH:mm:ss"), logElement.log)));
         }
 
         public void OpenLogsWindow(int processId)
