@@ -268,12 +268,14 @@ namespace BimsController.Logics.Bot
             string profilePath = null;
             bool usingTrial = true;
             string wowPath = null;
+            bool useLowSettings = true;
 
             Logic.Execute(logic =>
             {
                 profilePath = logic.settings.appSettings.profilesSettings[sessionId].profilePath;
                 usingTrial = logic.settings.appSettings.generalSettings.usingTrial;
                 wowPath = logic.settings.appSettings.profilesSettings[sessionId].wowPath;
+                useLowSettings = logic.settings.appSettings.profilesSettings[sessionId].useWowLowSettings;
             }, true);
 
             Process additionalWowProcess = null;
@@ -281,6 +283,8 @@ namespace BimsController.Logics.Bot
 
             if (Infos.Where(info => info.WowProcess != null).Count() <= 1)
             {
+                if (useLowSettings)
+                    FileManager.getInstance().UpdateWowSettings(wowPath, sessionId);
                 usingAdditionalWowProcess = true;
                 additionalWowProcess = new Process();
                 additionalWowProcess.StartInfo.FileName = wowPath;
@@ -296,6 +300,9 @@ namespace BimsController.Logics.Bot
                         LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
                         if (usingAdditionalWowProcess)
                         {
+                            if (useLowSettings)
+                                FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
                             additionalWowProcess.Kill();
                             additionalWowProcess = null;
                         }
@@ -303,6 +310,9 @@ namespace BimsController.Logics.Bot
                         return false;
                     }
                 }
+
+                if (useLowSettings)
+                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
             }
 
             while (LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
@@ -397,6 +407,7 @@ namespace BimsController.Logics.Bot
             ProcessInfo currentInfo = Infos[sessionId];
             string profilePath = null;
             bool usingTrial = true;
+            bool useLowSettings = true;
             string wowPath = null;
 
             Logic.Execute(logic =>
@@ -404,6 +415,7 @@ namespace BimsController.Logics.Bot
                 profilePath = logic.settings.appSettings.profilesSettings[sessionId].profilePath;
                 usingTrial = logic.settings.appSettings.generalSettings.usingTrial;
                 wowPath = logic.settings.appSettings.profilesSettings[sessionId].wowPath;
+                useLowSettings = logic.settings.appSettings.profilesSettings[sessionId].useWowLowSettings;
             }, true);
 
 
@@ -412,6 +424,9 @@ namespace BimsController.Logics.Bot
 
             if (Infos.Where(info => info.WowProcess != null).Count() <= 1)
             {
+                if (useLowSettings)
+                    FileManager.getInstance().UpdateWowSettings(wowPath, sessionId);
+
                 usingAdditionalWowProcess = true;
                 additionalWowProcess = new Process();
                 additionalWowProcess.StartInfo.FileName = wowPath;
@@ -427,6 +442,9 @@ namespace BimsController.Logics.Bot
                         LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
                         if (usingAdditionalWowProcess)
                         {
+                            if (useLowSettings)
+                                FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
                             additionalWowProcess.Kill();
                             additionalWowProcess = null;
                         }
@@ -434,6 +452,9 @@ namespace BimsController.Logics.Bot
                         return false;
                     }
                 }
+
+                if (useLowSettings)
+                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
             }
 
             while (LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
@@ -530,6 +551,7 @@ namespace BimsController.Logics.Bot
             string wowPath = null;
             int wowOpeningDelay = 20000;
             int enteringToWorldDelay = 20000;
+            bool useLowSettings = true;
 
             ProcessInfo currentInfo = Infos[sessionId];
 
@@ -537,12 +559,16 @@ namespace BimsController.Logics.Bot
                 wowPath = logic.settings.appSettings.profilesSettings[sessionId].wowPath;
                 wowOpeningDelay = logic.settings.appSettings.generalSettings.openingWowDelay;
                 enteringToWorldDelay = logic.settings.appSettings.generalSettings.enteringToWorldDelay;
+                useLowSettings = logic.settings.appSettings.profilesSettings[sessionId].useWowLowSettings;
             }, true);
 
 
             await currentInfo.SetState(ProcessStates.StartingWow, 50);
 
             await Task.Delay(3000 * sessionId);
+
+            if (useLowSettings)
+                FileManager.getInstance().UpdateWowSettings(wowPath, sessionId);
 
             Infos[sessionId].WowProcess = new Process();
             Infos[sessionId].WowProcess.StartInfo.FileName = wowPath;
@@ -562,6 +588,9 @@ namespace BimsController.Logics.Bot
 
                     if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
                     {
+                        if (useLowSettings)
+                            FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
                         await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                         Infos[sessionId].CloseWowProcess();
                         LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
@@ -574,7 +603,8 @@ namespace BimsController.Logics.Bot
 
                 await currentInfo.SetState(ProcessStates.CheckingIsWowOpened, 50);
 
-                
+                if (useLowSettings)
+                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
 
                 requireToCheckOpenedClient = !(await CheckIsClientOpened(Infos[sessionId].WowProcess.Id, sessionId));
 
@@ -588,6 +618,7 @@ namespace BimsController.Logics.Bot
                 }
 
             } while (requireToCheckOpenedClient);
+
 
             await currentInfo.SetState(ProcessStates.EnteringCredentials, 50);
 

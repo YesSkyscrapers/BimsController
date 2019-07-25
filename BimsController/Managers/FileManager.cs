@@ -1,4 +1,5 @@
 ﻿using BimsController.Defines;
+using BimsController.Logics;
 using BimsController.Logics.Settings;
 using Newtonsoft.Json;
 using System;
@@ -47,6 +48,51 @@ namespace BimsController.Managers
             {
                 throw Errors.FailedSaveAppSettings;
             }
+        }
+
+        public void UpdateWowSettings(string exePath, int sessionId)
+        {
+            string configPath = exePath.Substring(0, exePath.LastIndexOf("\\")) + "\\WTF\\UWow.wtf";
+            string configBackupPath = exePath.Substring(0, exePath.LastIndexOf("\\")) + "\\WTF\\UWow_.wtf";
+            try
+            {
+                if (File.Exists(configBackupPath))
+                    return;
+
+                File.Move(configPath, configBackupPath);
+            }
+            catch (Exception ex)
+            {
+                Logic.Execute(logic => logic.logs.Log(sessionId, string.Format("Failed to save previous wow settings ({0})", ex.Message)));
+                return;
+            };
+            try
+            {
+                File.Copy("UWow.wtf", configPath);
+            }
+            catch (Exception ex)
+            {
+                Logic.Execute(logic => logic.logs.Log(sessionId, string.Format("Failed to update wow settings ({0})", ex.Message)));
+                File.Move(configBackupPath, configPath);
+            }
+        }
+
+        public void ReturnWowSettings(string exePath, int sessionId)
+        {
+            string configPath = exePath.Substring(0, exePath.LastIndexOf("\\")) + "\\WTF\\UWow.wtf";
+            string configBackupPath = exePath.Substring(0, exePath.LastIndexOf("\\")) + "\\WTF\\UWow_.wtf";
+            try
+            {
+                if (!File.Exists(configBackupPath))
+                    return;
+
+                File.Delete(configPath);
+                File.Move(configBackupPath, configPath);
+            }
+            catch (Exception ex) {
+                Logic.Execute(logic => logic.logs.Log(sessionId, string.Format("Failed to return previous wow settings ({0})", ex.Message)));
+            };
+            
         }
     }
 }

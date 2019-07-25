@@ -48,6 +48,7 @@ namespace BimsController.Windows
             EnteredWorldKeys.Text = _appSettings.profilesSettings[_selectedProfileForEdit].keysToPressAfterEnteringToWorld;
             RestartServerTimeTextBox.Text = _appSettings.profilesSettings[_selectedProfileForEdit].serverRestartTime.ToString("HH:mm");
             AvoidRestartServerCheckBox.IsChecked = _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
+            UseLowSettingsCheckBox.IsChecked = _appSettings.profilesSettings[_selectedProfileForEdit].useWowLowSettings;
 
             BimsbotProfilePathTextBox.IsEnabled = profileEnabled;
             BimsbotProfilePathButton.IsEnabled = profileEnabled;
@@ -60,6 +61,7 @@ namespace BimsController.Windows
             AvoidRestartServerCheckBox.IsEnabled = profileEnabled;
             RestartServerTimeTextBox.IsEnabled = profileEnabled && _appSettings.profilesSettings[_selectedProfileForEdit].avoidServerRestart;
             EnteredWorldKeys.IsEnabled = profileEnabled;
+            UseLowSettingsCheckBox.IsEnabled = profileEnabled;
 
             UsingTrialCheckBox.IsChecked = _appSettings.generalSettings.usingTrial;
             CheckStatusDelayTextBox.Text = _appSettings.generalSettings.checkStatusDelay.ToString();
@@ -250,6 +252,14 @@ namespace BimsController.Windows
                 {
                     RestartServerTimeTextBox.Foreground = Brushes.Red;
                 }
+            }
+        }
+
+        private void UseLowSettingsCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_appSettings != null)
+            {
+                _appSettings.profilesSettings[_selectedProfileForEdit].useWowLowSettings = (bool)UseLowSettingsCheckBox.IsChecked;
             }
         }
     }

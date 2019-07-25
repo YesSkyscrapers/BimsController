@@ -87,10 +87,11 @@
                                 <TextBox VerticalContentAlignment="Center" x:Name="LoginTextBox" Height="25" Margin="0,30,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="LoginTextBox_TextChanged"></TextBox>
                                 <Label Margin="0,60,0,0">Password:</Label>
                                 <TextBox VerticalContentAlignment="Center" x:Name="PasswordTextBox" Height="25" Margin="0,90,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="PasswordTextBox_TextChanged"></TextBox>
-                                <Label Margin="0,190,0,0">Entered World Keys:</Label>
-                                <TextBox VerticalContentAlignment="Center" x:Name="EnteredWorldKeys" Height="25" Margin="0,220,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
-                                <CheckBox x:Name="AvoidRestartServerCheckBox" Content="  Avoid Server Restart" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Checked="AvoidRestartServerCheckBox_Checked" Unchecked="AvoidRestartServerCheckBox_Checked"/>
-                                <TextBox VerticalContentAlignment="Center" x:Name="RestartServerTimeTextBox" Text="7:00" HorizontalContentAlignment="Center" TextChanged="RestartServerTimeTextBox_TextChanged" Height="25" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 160, 0 ,0"/>
+                                <Label Margin="0,230,0,0">Entered World Keys:</Label>
+                                <TextBox VerticalContentAlignment="Center" x:Name="EnteredWorldKeys" Height="25" Margin="0,260,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" TextChanged="EnteredWorldKeys_TextChanged"></TextBox>
+                                <CheckBox x:Name="AvoidRestartServerCheckBox" Content="  Avoid Server Restart" HorizontalAlignment="Left" Margin="0,200,0,0" VerticalAlignment="Top" Checked="AvoidRestartServerCheckBox_Checked" Unchecked="AvoidRestartServerCheckBox_Checked"/>
+                                <TextBox VerticalContentAlignment="Center" x:Name="RestartServerTimeTextBox" Text="7:00" HorizontalContentAlignment="Center" TextChanged="RestartServerTimeTextBox_TextChanged" Height="25" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 195, 0 ,0"/>
+                                <CheckBox x:Name="UseLowSettingsCheckBox" Content="  Use low graphic settings (Uwow feature)" HorizontalAlignment="Left" Margin="0,165,0,0" VerticalAlignment="Top" Checked="UseLowSettingsCheckBox_Checked" Unchecked="UseLowSettingsCheckBox_Checked"/>
                             </Grid> 
                             <Grid Grid.Column="1" Margin="10,0">
                                 <Label Margin="0,0,0,0">Character Name:</Label>
