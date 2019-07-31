@@ -300,19 +300,20 @@ namespace BimsController.Logics.Bot
                         LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
                         if (usingAdditionalWowProcess)
                         {
+                            additionalWowProcess.Kill();
+                            additionalWowProcess = null;
+
+                            await Task.Delay(1000);
+
                             if (useLowSettings)
                                 FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
 
-                            additionalWowProcess.Kill();
-                            additionalWowProcess = null;
+
                         }
 
                         return false;
                     }
                 }
-
-                if (useLowSettings)
-                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
             }
 
             while (LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
@@ -327,6 +328,13 @@ namespace BimsController.Logics.Bot
                     {
                         additionalWowProcess.Kill();
                         additionalWowProcess = null;
+
+                        await Task.Delay(1000);
+
+                        if (useLowSettings)
+                            FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                     }
 
                     return false;
@@ -346,6 +354,14 @@ namespace BimsController.Logics.Bot
                 {
                     additionalWowProcess.Kill();
                     additionalWowProcess = null;
+
+
+                    await Task.Delay(1000);
+
+                    if (useLowSettings)
+                        FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                 }
 
 
@@ -365,6 +381,14 @@ namespace BimsController.Logics.Bot
                 {
                     additionalWowProcess.Kill();
                     additionalWowProcess = null;
+
+
+                    await Task.Delay(1000);
+
+                    if (useLowSettings)
+                        FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                 }
 
 
@@ -384,6 +408,14 @@ namespace BimsController.Logics.Bot
                 additionalWowProcess.Kill();
                 additionalWowProcess = null;
                 usingAdditionalWowProcess = false;
+
+
+                await Task.Delay(1000);
+
+                if (useLowSettings)
+                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
             }
             LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
 
@@ -442,19 +474,23 @@ namespace BimsController.Logics.Bot
                         LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
                         if (usingAdditionalWowProcess)
                         {
-                            if (useLowSettings)
-                                FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
 
                             additionalWowProcess.Kill();
                             additionalWowProcess = null;
+
+
+                            await Task.Delay(1000);
+
+                            if (useLowSettings)
+                                FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                         }
 
                         return false;
                     }
                 }
 
-                if (useLowSettings)
-                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
             }
 
             while (LocksManager.getInstance().CheckLock(LocksManager.OpeningBimsbot))
@@ -469,6 +505,14 @@ namespace BimsController.Logics.Bot
                     {
                         additionalWowProcess.Kill();
                         additionalWowProcess = null;
+
+
+                        await Task.Delay(1000);
+
+                        if (useLowSettings)
+                            FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                     }
 
                     return false;
@@ -488,6 +532,14 @@ namespace BimsController.Logics.Bot
                 {
                     additionalWowProcess.Kill();
                     additionalWowProcess = null;
+
+
+                    await Task.Delay(1000);
+
+                    if (useLowSettings)
+                        FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                 }
 
 
@@ -507,6 +559,14 @@ namespace BimsController.Logics.Bot
                 {
                     additionalWowProcess.Kill();
                     additionalWowProcess = null;
+
+
+                    await Task.Delay(1000);
+
+                    if (useLowSettings)
+                        FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
                 }
 
 
@@ -524,6 +584,14 @@ namespace BimsController.Logics.Bot
                 additionalWowProcess.Kill();
                 additionalWowProcess = null;
                 usingAdditionalWowProcess = false;
+
+
+                await Task.Delay(1000);
+
+                if (useLowSettings)
+                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
+
             }
 
             LocksManager.getInstance().Unlock(LocksManager.OpeningWowClient);
@@ -588,11 +656,13 @@ namespace BimsController.Logics.Bot
 
                     if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
                     {
+                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
+                        Infos[sessionId].CloseWowProcess();
+                        await Task.Delay(1000);
+
                         if (useLowSettings)
                             FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
 
-                        await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
-                        Infos[sessionId].CloseWowProcess();
                         LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                         await CallToStopProcess(sessionId);
 
@@ -603,14 +673,17 @@ namespace BimsController.Logics.Bot
 
                 await currentInfo.SetState(ProcessStates.CheckingIsWowOpened, 50);
 
-                if (useLowSettings)
-                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
-
                 requireToCheckOpenedClient = !(await CheckIsClientOpened(Infos[sessionId].WowProcess.Id, sessionId));
 
                 if (CheckInterruptingLock(LocksManager.InterruptingOpeningWowClient, sessionId))
                 {
                     Infos[sessionId].CloseWowProcess();
+
+                    await Task.Delay(1000);
+
+                    if (useLowSettings)
+                        FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
                     LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                     await CallToStopProcess(sessionId);
 
@@ -628,6 +701,12 @@ namespace BimsController.Logics.Bot
             {
                 await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, string.Format("Launch aborted ({0})", currentInfo.State.description)));
                 Infos[sessionId].CloseWowProcess();
+
+                await Task.Delay(1000);
+
+                if (useLowSettings)
+                    FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
                 LocksManager.getInstance().Unlock(LocksManager.MainBotStartingProcess, sessionId);
                 await CallToStopProcess(sessionId);
 
@@ -674,8 +753,13 @@ namespace BimsController.Logics.Bot
                 if (attempt >= 15)
                 {
                     await Logic.ExecuteAsync(async logic => logic.logs.Log(sessionId, "Character is still offline. Relaunching the game"));
-                    Infos[sessionId].WowProcess.Kill();
-                    Infos[sessionId].WowProcess = null;
+                    Infos[sessionId].CloseWowProcess();
+
+                    await Task.Delay(1000);
+
+                    if (useLowSettings)
+                        FileManager.getInstance().ReturnWowSettings(wowPath, sessionId);
+
                     await OpenWowClient(sessionId);
                     return;
                 }

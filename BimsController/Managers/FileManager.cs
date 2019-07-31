@@ -56,10 +56,8 @@ namespace BimsController.Managers
             string configBackupPath = exePath.Substring(0, exePath.LastIndexOf("\\")) + "\\WTF\\UWow_.wtf";
             try
             {
-                if (File.Exists(configBackupPath))
-                    return;
-
-                File.Move(configPath, configBackupPath);
+                if (!File.Exists(configBackupPath))
+                    File.Move(configPath, configBackupPath);
             }
             catch (Exception ex)
             {
@@ -68,6 +66,8 @@ namespace BimsController.Managers
             };
             try
             {
+                if (File.Exists(configPath))
+                    File.Delete(configPath);
                 File.Copy("UWow.wtf", configPath);
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace BimsController.Managers
                     return;
 
                 File.Delete(configPath);
-                File.Move(configBackupPath, configPath);
+                File.Copy(configBackupPath, configPath);
             }
             catch (Exception ex) {
                 Logic.Execute(logic => logic.logs.Log(sessionId, string.Format("Failed to return previous wow settings ({0})", ex.Message)));
