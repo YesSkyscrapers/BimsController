@@ -94,5 +94,14 @@ namespace BimsController.Managers
             };
             
         }
+
+        public void WriteLogs(int sessionId, string text)
+        {
+            try
+            {
+                File.AppendAllText("log_session_" + sessionId.ToString() + ".txt", text, Encoding.UTF8);
+            }
+            catch (Exception ex) { };
+        }
     }
 }

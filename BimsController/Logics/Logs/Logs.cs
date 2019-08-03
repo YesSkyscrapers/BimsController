@@ -43,6 +43,8 @@ namespace BimsController.Logics.Logs
 
             _logs.Add(new LogsElement(processId, log));
 
+            
+
             _subscribers.ForEach(subscriber => subscriber());
         }
 
