@@ -1,4 +1,5 @@
-﻿using BimsController.Windows;
+﻿using BimsController.Managers;
+using BimsController.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +42,11 @@ namespace BimsController.Logics.Logs
                 oldLogs.ToList().ForEach(oldLog => _logs.Remove(oldLog));
             }
 
-            _logs.Add(new LogsElement(processId, log));
+            LogsElement logElement = new LogsElement(processId, log);
 
-            
+            _logs.Add(logElement);
+
+            FileManager.getInstance().WriteLogs(processId, string.Format("[{0}]: {1}", logElement.time.ToString("HH:mm:ss"), logElement.log));
 
             _subscribers.ForEach(subscriber => subscriber());
         }

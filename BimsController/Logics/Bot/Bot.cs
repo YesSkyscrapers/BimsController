@@ -344,7 +344,7 @@ namespace BimsController.Logics.Bot
             LocksManager.getInstance().Lock(LocksManager.OpeningBimsbot);
 
             currentInfo.BimsbotProcess = Process.Start(profilePath);
-            await Task.Delay(3000);
+            await Task.Delay(5000);
 
             if (LocksManager.getInstance().CheckLock(LocksManager.InterruptingOpeningWowClient, sessionId))
             {
@@ -371,7 +371,7 @@ namespace BimsController.Logics.Bot
             if (usingTrial)
                 WinApi.CloseWindow(currentInfo.BimsbotProcess.MainWindowHandle);
 
-            await Task.Delay(3000);
+            await Task.Delay(5000);
 
             if (LocksManager.getInstance().CheckLock(LocksManager.InterruptingOpeningWowClient, sessionId))
             {
@@ -522,7 +522,7 @@ namespace BimsController.Logics.Bot
             LocksManager.getInstance().Lock(LocksManager.OpeningBimsbot);
 
             currentInfo.BimsbotProcess = Process.Start(profilePath);
-            await Task.Delay(3000);
+            await Task.Delay(5000);
 
             if (LocksManager.getInstance().CheckLock(LocksManager.InterruptingOpeningWowClient, sessionId))
             {
@@ -549,7 +549,7 @@ namespace BimsController.Logics.Bot
             if (usingTrial)
                 WinApi.CloseWindow(currentInfo.BimsbotProcess.MainWindowHandle);
 
-            await Task.Delay(3000);
+            await Task.Delay(5000);
 
             if (LocksManager.getInstance().CheckLock(LocksManager.InterruptingOpeningWowClient, sessionId))
             {
@@ -843,12 +843,12 @@ namespace BimsController.Logics.Bot
 
                 Infos[sessionId].BimsbotProcess = Process.Start(profilePath);
 
-                await Task.Delay(3000);
+                await Task.Delay(5000);
 
                 if (usingTrial)
                     WinApi.CloseWindow(currentInfo.BimsbotProcess.MainWindowHandle);
 
-                await Task.Delay(3000);
+                await Task.Delay(5000);
 
                 if (Infos.Where(info => info.WowProcess != null).Count() > 1)
                 {
@@ -864,7 +864,7 @@ namespace BimsController.Logics.Bot
                     await WinApi.SelectLineInPidsList(ourLine);
                 }
 
-                await Task.Delay(3000);
+                await Task.Delay(7000);
 
                 currentInfo.BimsbotHandler = 0;
                 while (currentInfo.BimsbotHandler ==0)

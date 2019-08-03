@@ -99,7 +99,7 @@ namespace BimsController.Managers
         {
             try
             {
-                File.AppendAllText("log_session_" + sessionId.ToString() + ".txt", text, Encoding.UTF8);
+                File.AppendAllText("log_session_" + sessionId.ToString() + ".txt", text + Environment.NewLine, Encoding.UTF8);
             }
             catch (Exception ex) { };
         }
